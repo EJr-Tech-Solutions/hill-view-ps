@@ -181,12 +181,21 @@ thead .sticky-col{background:var(--bg)}
 // ══════════════════════════════════════════════════
 const SUPA_URL = 'https://gtguutliwmhntuigcqta.supabase.co';
 const SUPA_KEY = 'sb_publishable_32CnYot-3Kn2ysRljL9-zQ_G5r_QqLI';
-const CLOUDINARY = {
-  cloudName: 'dkh8e8upn',
-  apiKey: '666746752822281',
-  apiSecret: 'Qg5lWT8QKPmlmHXJ-i4cYwUcvBY'
-};
-const db = supabase.createClient(SUPA_URL, SUPA_KEY);
+const BASE_URL = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
+let CLOUDINARY = { cloudName: '', apiKey: '', apiSecret: '' };
+fetch('api/config')
+  .then(r => r.json())
+  .then(cfg => { CLOUDINARY = cfg.cloudinary; })
+  .catch(() => {
+    CLOUDINARY = {
+      cloudName: 'dkh8e8upn',
+      apiKey: '666746752822281',
+      apiSecret: 'Qg5lWT8QKPmlmHXJ-i4cYwUcvBY'
+    };
+  });
+const db = supabase.createClient(SUPA_URL, SUPA_KEY, {
+  auth: { redirectTo: BASE_URL }
+});
 
 // ══════════════════════════════════════════════════
 //  SCHEMA KNOWLEDGE (matches seed.sql exactly)

@@ -2,6 +2,7 @@ node_modules
 .next
 .env.local
 .DS_Store
-.jpg
-.jpeg
-.png
+*.jpg
+*.jpeg
+*.png
+docs/index.html

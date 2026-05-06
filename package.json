@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build:docs": "node scripts/build-docs.mjs",
+    "build": "npm run build:docs && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -21,6 +22,7 @@
     "@types/node": "^20.14.10",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "dotenv": "^16.6.1",
     "typescript": "^5.5.4"
   }
 }

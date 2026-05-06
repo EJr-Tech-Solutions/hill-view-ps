@@ -2956,11 +2956,11 @@ async function openTeacherModal(teacher) {
         // Wait for DB trigger to create the users row
         let verified = false;
         for (let i = 0; i < 10; i++) {
-          const {data: v} = await db.from('users').select('id').eq('id', newUser.id).single();
-          if (v) { verified = true; break; }
+          const {data: v} = await db.from('users').select('id').eq('id', newUser.id);
+          if (v && v.length > 0) { verified = true; break; }
           await new Promise(r => setTimeout(r, 500));
         }
-        if (!verified) { flashToast('User created but DB sync failed. Check Supabase SQL trigger.', 'err'); saveBtn.disabled = false; saveBtn.textContent = 'Create Teacher'; return; }
+        if (!verified) { flashToast('Teacher created in auth but DB row not found. Run the SQL trigger setup, then try again.', 'err'); console.warn('User not visible after 5s'); saveBtn.disabled = false; saveBtn.textContent = 'Create Teacher'; return; }
         // Add to teacher_classes for all selected classes
         for (const cid of assignedClassIds) {
           try {

@@ -1,8 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, useCallback } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import MarksEntryClient from "./MarksEntryClient";
+
+type AssignedClass = {
+  id: string;
+  name: string;
+};
 
 type Pupil = {
   id: string;
@@ -36,6 +41,7 @@ type DashboardPayload = {
     id: string;
     name: string;
   } | null;
+  assignedClasses: AssignedClass[];
   pupils: Pupil[];
   subjects: Subject[];
   marks: Mark[];
@@ -49,18 +55,22 @@ type DashboardPayload = {
 
 export default function TeacherDashboardClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [data, setData] = useState<DashboardPayload | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedClass, setSelectedClass] = useState<string>("");
 
-  useEffect(() => {
-    const loadDashboard = async () => {
+  const loadDashboard = useCallback(
+    async (classId?: string) => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch("/api/teacher/dashboard", {
-        cache: "no-store"
-      });
+      const params = new URLSearchParams();
+      if (classId) params.set("classId", classId);
+      const url = `/api/teacher/dashboard${params.toString() ? "?" + params.toString() : ""}`;
+
+      const response = await fetch(url, { cache: "no-store" });
 
       if (response.status === 401) {
         router.replace("/login");
@@ -81,11 +91,20 @@ export default function TeacherDashboardClient() {
       }
 
       setData(payload);
+      setSelectedClass(payload.user.classId ?? "");
       setLoading(false);
-    };
+    },
+    [router]
+  );
 
-    loadDashboard();
-  }, [router]);
+  useEffect(() => {
+    loadDashboard(searchParams?.get("classId") ?? undefined);
+  }, [loadDashboard, searchParams]);
+
+  const handleClassChange = (classId: string) => {
+    setSelectedClass(classId);
+    loadDashboard(classId);
+  };
 
   if (loading) {
     return <div className="loader">Loading teacher dashboard...</div>;
@@ -97,7 +116,23 @@ export default function TeacherDashboardClient() {
 
   return (
     <section>
-      <h2 className="page-h">Marks Entry</h2>
+      <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "22px" }}>
+        <h2 className="page-h" style={{ marginBottom: 0 }}>Marks Entry</h2>
+
+        {data.assignedClasses.length > 1 && (
+          <select
+            value={selectedClass}
+            onChange={(e) => handleClassChange(e.target.value)}
+            style={{ width: "auto", padding: "8px 12px", fontSize: "13.5px" }}
+          >
+            {data.assignedClasses.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        )}
+      </div>
 
       <div className="mc-grid">
         <div className="mc">
@@ -113,7 +148,15 @@ export default function TeacherDashboardClient() {
           <div className="mc-lbl">Subjects</div>
         </div>
         <div className="mc">
-          <div className="mc-val" style={{ color: data.performance?.average_score && data.performance.average_score >= 60 ? "var(--g)" : "var(--danger)" }}>
+          <div
+            className="mc-val"
+            style={{
+              color:
+                data.performance?.average_score && data.performance.average_score >= 60
+                  ? "var(--g)"
+                  : "var(--danger)"
+            }}
+          >
             {data.performance?.average_score?.toFixed(1) ?? "–"}%
           </div>
           <div className="mc-lbl">Class Average</div>

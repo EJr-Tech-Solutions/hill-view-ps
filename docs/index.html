@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hill View Primary School — Reports</title>
+<link rel="icon" type="image/png" href="badge.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -344,7 +345,7 @@ thead .sticky-col{background:var(--primary-xl)}
   display:flex;
   align-items:center;
   justify-content:center;
-  background:linear-gradient(135deg,var(--primary-dk) 0%,var(--primary) 50%,var(--primary-md) 100%);
+  background:#e8edf5;
   position:relative;
   overflow:hidden;
 }
@@ -352,7 +353,9 @@ thead .sticky-col{background:var(--primary-xl)}
   content:'';
   position:absolute;
   inset:0;
-  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background:url('badge.png') center/contain no-repeat;
+  opacity:.06;
+  pointer-events:none;
 }
 .login-card{
   background:var(--surface);
@@ -367,12 +370,15 @@ thead .sticky-col{background:var(--primary-xl)}
 }
 .login-logo{
   width:60px;height:60px;
-  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-md) 100%);
   border-radius:16px;
   display:flex;align-items:center;justify-content:center;
   margin:0 auto 20px;
   box-shadow:0 4px 14px rgba(30,58,95,.4);
+  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-md) 100%);
+  overflow:hidden;
+  padding:4px;
 }
+.login-logo img{width:100%;height:100%;object-fit:contain;border-radius:12px}
 .login-h1{
   font-size:22px;
   font-weight:800;
@@ -684,6 +690,11 @@ thead .sticky-col{background:var(--primary-xl)}
 }
 .gen-all-btn:hover{background:var(--primary-md)}.gen-all-btn:disabled{opacity:.5;cursor:not-allowed}
 .gen-progress{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.gen-sel{transition:border-color .15s}
+.gen-sel option{color:#1a1d23;background:#fff}
+.gen-banner-top{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.gen-banner-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.report-layout{display:grid;grid-template-columns:240px 1fr;gap:20px;align-items:start}
 
 /* ── PAGE HEADER AREA ── */
 .page-header{
@@ -700,17 +711,70 @@ thead .sticky-col{background:var(--primary-xl)}
   flex-shrink:0;
   color:var(--primary);
 }
+.nav-brand-text{white-space:nowrap}
+.search-input{width:180px;transition:width .15s}
+@media(max-width:490px){.search-input{width:100%}}
 
 /* ── RESPONSIVE ── */
-@media(max-width:900px){.two-col{grid-template-columns:1fr}.mc-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:640px){.sidebar{width:50px}.nav-item span{display:none}.content{padding:16px}.nav-item.active::before{display:none}}
-@media(max-width:490px){
-  .mc-grid{grid-template-columns:1fr}
+@media(max-width:900px){
   .two-col{grid-template-columns:1fr}
+  .mc-grid{grid-template-columns:repeat(2,1fr)}
+  .form-grid{grid-template-columns:1fr}
+  .navbar{padding:0 16px;gap:10px}
+  .nav-brand{font-size:14px}
+  .badge-role{padding:2px 8px;font-size:9.5px}
+  .btn-signout{padding:4px 10px;font-size:11px}
+  .nav-user{font-size:11px}
+}
+@media(max-width:768px){
+  .teach-card{flex-wrap:wrap;gap:12px}
+  .teach-avatar{width:48px;height:48px;font-size:16px}
+  .teach-info{flex:1 1 100%;order:1}
+  .teach-name{font-size:14px}
+  .teach-actions{flex:1 1 auto;order:2;justify-content:flex-end}
+  .report-preview-sheet{width:100%;min-height:auto}
+  .add-pupil-panel{flex-direction:column;align-items:stretch}
+  .add-pupil-panel input{max-width:none}
+  .gen-all-banner{flex-direction:column}
+}
+@media(max-width:640px){
+  .sidebar{width:50px;padding:16px 0}
+  .nav-item{justify-content:center;padding:9px 0}
+  .nav-item span{display:none}
+  .content{padding:16px}
+  .nav-item.active::before{display:none}
+  .page-h{font-size:19px;margin-bottom:16px}
+  .mc-grid{gap:10px}
+  .mc{padding:16px}
+  .mc-val{font-size:24px}
+  .hdr-row{gap:8px}
+  .marks-actions{gap:8px}
+  .action-bar{gap:8px}
+  .save-toast{bottom:16px;right:16px;left:16px;text-align:center}
+  .card{padding:16px}
+  .avatar-grid{grid-template-columns:repeat(auto-fill,minmax(75px,1fr));gap:8px}
+  .avatar-img{width:52px;height:52px;font-size:18px}
+  .login-card{padding:28px 24px}
+  .login-h1{font-size:20px}
+  .modal-box{padding:22px;width:95vw}
+  .excel-tbl thead th.name-col{min-width:120px}
+  .excel-tbl{font-size:12px}
+  .xcel-inp{width:48px;padding:4px 2px;font-size:12px}
+}
+@media(max-width:490px){
+  .mc-grid{grid-template-columns:1fr 1fr}
   .inline-form{flex-direction:column}
   .inline-form input,.inline-form select{flex:1;min-width:100%}
   .excel-wrap{font-size:11px}
   .xcel-inp{width:40px;padding:3px 2px;font-size:11px}
+  .nav-brand .brand-text{display:none}
+  .nav-user{display:none}
+  .badge-role{display:none}
+  .mc-val{font-size:22px}
+  .mc-lbl{font-size:11px}
+  .teach-card{padding:14px 16px}
+  .gen-banner-top{flex-direction:column;gap:10px}
+  .gen-banner-actions{flex-direction:column;align-items:stretch}
 }
 </style>
 </head>
@@ -786,6 +850,8 @@ const S = {
   pupilsLoaded: false,
   teacherSearch: '',
   editingTeacher: null,
+  // settings
+  termSettings: null,
   // ui
   loading: true,
   chartInst: null,
@@ -848,7 +914,7 @@ async function loadAll() {
   const [clsR,subR,pupR] = await Promise.all([
     db.from('classes').select('id,name').order('name'),
     db.from('subjects').select('id,name,level').order('name'),
-    db.from('pupils').select('id,name,class_id').order('name'),
+    db.from('pupils').select('id,name,class_id,avatar,house,paycode').order('name'),
   ]);
   S.classes  = clsR.data  || [];
   S.subjects = subR.data  || [];
@@ -890,6 +956,7 @@ async function loadAll() {
     ]);
     S.classPerf   = perfR.data   || [];
     S.submissions = subStatusR.data || [];
+    await loadTermSettings();
   }
 
   // Default selection
@@ -909,13 +976,35 @@ async function loadReportPupils() {
 
 async function loadReportForPupil(pupilId) {
   S.reportSelId=pupilId;
-  const [sumR,subjR] = await Promise.all([
+  const [sumR,subjR,pupR] = await Promise.all([
     db.from('pupil_report_summary').select('pupil_id,pupil_name,class_name,total_score,average_score,position,uneb_grade').eq('pupil_id',pupilId).single(),
     db.from('pupil_report_subjects').select('subject_name,score,teacher_comment').eq('pupil_id',pupilId),
+    db.from('pupils').select('id,avatar,house,paycode').eq('id',pupilId).single(),
   ]);
-  S.reportSummary  = sumR.data||null;
+  S.reportSummary  = sumR.data ? {...sumR.data, pupil_avatar: pupR.data?.avatar||null, house: pupR.data?.house||'', paycode: pupR.data?.paycode||''} : null;
   S.reportSubjects = subjR.data||[];
   render();
+}
+
+// ══════════════════════════════════════════════════
+//  TERM SETTINGS
+// ══════════════════════════════════════════════════
+async function loadTermSettings() {
+  const { data } = await db.from('term_settings').select('*').limit(1).single();
+  S.termSettings = data || { id: null, term: '', term_start: '', term_end: '', next_term_start: '' };
+}
+
+async function saveTermSettings(term, termStart, termEnd, nextTermStart) {
+  const row = { term, term_start: termStart, term_end: termEnd, next_term_start: nextTermStart };
+  if (S.termSettings?.id) {
+    const { error } = await db.from('term_settings').update(row).eq('id', S.termSettings.id);
+    if (error) return error.message;
+  } else {
+    const { data, error } = await db.from('term_settings').insert(row).select().single();
+    if (error) return error.message;
+    if (data) S.termSettings = data;
+  }
+  return null;
 }
 
 // ══════════════════════════════════════════════════
@@ -1066,163 +1155,45 @@ async function signOut() {
 }
 
 // ══════════════════════════════════════════════════
-//  NURSERY REPORT HELPERS
+//  REPORT GENERATION (matches reports.html template)
 // ══════════════════════════════════════════════════
-// Seven NCDC ECD learning areas mapped from subject names
-const NURSERY_AREAS = [
-  'Language & Literacy',
-  'Mathematics & Numeracy',
-  'Creative Arts',
-  'Physical & Health Education',
-  'Social & Emotional Development',
-  'Environmental Studies',
-  'Religious & Moral Education',
-];
-
-// Score → number of filled circles (out of 5)
-function scoreToDots(score) {
-  if (score >= 90) return 5;
-  if (score >= 75) return 4;
-  if (score >= 60) return 3;
-  if (score >= 45) return 2;
-  if (score >= 25) return 1;
-  return 0;
-}
-
-function renderDots(filled, total=5) {
-  let out = '';
-  for (let i = 0; i < total; i++) {
-    if (i < filled) {
-      // Only marks circles are shaded
-      out += `<span class="dot dot-filled"></span>`;
-    } else {
-      out += `<span class="dot dot-empty"></span>`;
-    }
-  }
-  return out;
-}
-
-function dotLabel(filled) {
-  const labels = ['Beginning','Developing','Approaching','Meeting','Exceeding'];
-  return labels[Math.min(filled, 4)] || 'Beginning';
-}
-
 const REPORT_TERM = 'Term 2';
 const REPORT_YEAR = '2025';
-const REPORT_STREAM = 'Main';
-const PRIMARY_REPORT_SUBJECTS = [
-  'English Language','Mathematics','Science','Social Studies',
-  'Religious Education','Local Language','Kiswahili',
-  'Creative Arts','Physical Education','ICT / Computer Studies',
-  'Agriculture','Home Economics'
-];
-const NURSERY_TEMPLATE_ROWS = [
-  ['LANGUAGE DEVELOPMENT','SINGING','RELATES WITH OTHERS'],
-  ['MATHEMATICS','LISTENING','CLEANLINESS'],
-  ['READING','PHYSICAL EDUCATION','TOILET USE'],
-  ['WRITING','LEADERSHIP','PUNCTUALITY'],
-  ['HEALTH','SHADING & DRAWING','ATTENDANCE'],
-  ['SOCIAL DEVELOPMENT','POEMS & RHYTHMS','SHARING']
+
+const PRIMARY_SUBJECTS = [
+  'English',
+  'Mathematics',
+  'Social Studies and RE',
+  'Integrated Science',
+  'Computer Studies',
+  'Practical Work'
 ];
 
-const REPORT_DOC_CSS = `
-  @page{size:A4;margin:0}
-  *{box-sizing:border-box}
-  body{margin:0;background:#e7ebe7;font-family:Arial,sans-serif;color:#111}
-  .toolbar{padding:12px 16px;background:#1e3a5f;color:#fff;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10}
-  .toolbar strong{flex:1;font-size:13px}
-  .toolbar button{border:none;background:rgba(255,255,255,.18);color:#fff;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer}
-  .sheet{width:210mm;min-height:297mm;margin:14px auto;background:#fff;padding:12mm 10mm 10mm;border:1px solid #cfd6cf}
-  .school-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
-  .school-center{flex:1;text-align:center}
-  .school-name{color:#cc1010;font-weight:900;font-size:21px;letter-spacing:.02em;text-transform:uppercase;line-height:1.1}
-  .school-sub{font-size:10px;font-weight:700;color:#111;margin-top:3px;line-height:1.7}
-  .report-title{font-weight:900;font-size:13px;letter-spacing:.1em;text-decoration:underline;text-underline-offset:3px;margin-top:4px}
-  .photo-box{width:76px;height:92px;border:1.5px solid #777;background:#e8e8e8;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-  .info-row{display:flex;flex-wrap:wrap;gap:0 20px;font-size:11.5px;font-weight:700;border-top:2px solid #000;border-bottom:2px solid #000;padding:5px 0;margin:7px 0 5px}
-  .info-item{display:flex;align-items:center;gap:4px}
-  .info-line{display:inline-block;width:90px;border-bottom:1px solid #555;height:14px;vertical-align:bottom}
-.info-line-sm{width:50px}
-.info-line-lg{width:120px}
-.section-title{text-align:center;font-weight:900;font-size:12px;text-decoration:underline;margin:7px 0 4px;text-transform:uppercase;letter-spacing:.07em}
-.lines3,.lines4{display:grid;gap:10px 12px;margin-bottom:8px;font-size:12px}
-  .lines3{grid-template-columns:1fr 1fr 1fr}
-  .lines4{grid-template-columns:1fr 1fr 1fr 1fr}
-  .line-field{white-space:nowrap}
-  .line{display:inline-block;min-width:90px;border-bottom:1px solid #555;height:14px;vertical-align:bottom;padding:0 2px}
-  .key-title{font-size:12px;font-weight:700;margin:8px 0 4px}
-  .key-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;margin-bottom:8px;font-size:11px}
-  .key-item{display:flex;align-items:center;gap:7px}
-  .key-dot{width:10px;height:10px;border-radius:50%;border:1px solid rgba(0,0,0,.15)}
-  .excellent{background:#f2c500}
-  .verygood{background:#d53636}
-  .good{background:#2e63d1}
-  .poor{background:#18962f}
-  .empty-dot{background:transparent}
-  .tbl{width:100%;border-collapse:collapse}
-  .tbl th,.tbl td{border:1.5px solid #444;padding:3px 6px;font-size:11.5px;vertical-align:middle;text-align:center}
-  .tbl th{font-weight:900;font-size:10.5px;text-transform:uppercase;background:#fff}
-  .tbl td:first-child{text-align:left;font-weight:700;padding-left:8px}
-  .tbl tbody tr:nth-child(odd) td{background:#f0f0f0}
-  .grade-box{background:#f0f0f0;border:1px solid #444;padding:6px 8px;margin-bottom:12px}
-  .grade-box .cap{font-size:11px;font-weight:700;margin-bottom:3px}
-  .grade-box table{width:100%;border-collapse:collapse}
-  .grade-box td,.grade-box th{border:none;padding:2px 4px;font-size:10px;text-align:center}
-  .g-row{display:grid;grid-template-columns:80px repeat(8,1fr);gap:0;background:#fff;border:1px solid #444}
-  .g-cell{text-align:center;padding:1px 2px;border-right:1px solid #aaa;font-size:10px}
-  .g-cell:last-child{border-right:none}
-  .g-head{font-weight:900;text-align:right;padding-right:6px}
-  .comment{margin-top:10px;font-size:11px}
-  .comment .label{font-weight:700;margin-bottom:2px}
-  .comment .lineblock{border-bottom:1px solid #555;height:18px}
-  .cmt-line{border-bottom:1px solid #666;margin:3px 0;min-height:15px}
-  .cmt-dotted{border-bottom:1px dotted #888}
-  .sig-row{display:flex;justify-content:flex-end;font-size:10px;color:#444;margin-top:1px}
-  .agg-row{display:flex;justify-content:center;gap:40px;font-weight:900;font-size:13px;margin:6px 0;align-items:center}
-  .agg-item{display:flex;align-items:center;gap:6px}
-  .agg-line{display:inline-block;width:48px;border-bottom:1px solid #555;height:14px}
-  .fees-row{display:flex;flex-wrap:wrap;gap:3px 24px;font-size:11px;font-weight:700;margin:5px 0}
-  .fees-line{display:inline-block;width:80px;border-bottom:1px solid #555;height:13px;vertical-align:bottom}
-  .dates-row{display:flex;justify-content:space-between;font-size:11px;font-weight:900;margin:6px 0}
-  .date-line{display:inline-block;width:80px;border-bottom:1px solid #555;height:13px;vertical-align:bottom}
-  .note-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:6px}
-  .note-box{font-size:10px;font-weight:700}
-  .stamp{width:64px;height:64px;border:2px dashed #aaa;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8.5px;color:#aaa;font-weight:700;text-align:center}
-  .motto{text-align:center;font-weight:900;font-size:13px;letter-spacing:.08em;margin-top:7px;border-top:2.5px solid #000;padding-top:6px}
-  .key-row{display:flex;gap:18px;font-size:11.5px;font-weight:700;align-items:center;flex-wrap:wrap;margin:6px 0 10px}
-  .dot{width:16px;height:16px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle;border:1px solid rgba(0,0,0,.15)}
-  .dot-y{background:#f5c518}.dot-r{background:#dc3545}.dot-g{background:#198754}.dot-b{background:#0d6efd}
-  .skills-grid{display:grid;grid-template-columns:repeat(5,1fr);border-top:1.5px solid #444;border-left:1.5px solid #444}
-  .skill-cell{border-right:1.5px solid #444;border-bottom:1.5px solid #444}
-  .skill-label{font-weight:900;font-size:9px;text-align:center;padding:3px 2px;border-bottom:1px solid #ccc;text-transform:capitalize;line-height:1.2;background:#f7f7f7;letter-spacing:.02em}
-  .skill-body{position:relative;height:88px;display:flex;align-items:center;justify-content:center;background:#f0f0f0}
-  .center{text-align:center}
-  .right{text-align:right}
-  @media print{body{background:#fff}.toolbar{display:none}.sheet{margin:0;border:none}}
-`;
+const SUBJECT_ALIASES = {
+  'English': ['English Language', 'English'],
+  'Mathematics': ['Mathematics'],
+  'Social Studies and RE': ['Social Studies', 'Social Studies and RE', 'RE', 'Religious Education'],
+  'Integrated Science': ['Science', 'Integrated Science'],
+  'Computer Studies': ['Computer Studies', 'ICT', 'ICT / Computer Studies', 'Computing'],
+  'Practical Work': ['Practical Work', 'Agriculture', 'Home Economics', 'Creative Arts']
+};
 
 function escapeHtml(val) {
   return String(val ?? '')
-    .replaceAll('&','&amp;')
-    .replaceAll('<','&lt;')
-    .replaceAll('>','&gt;')
-    .replaceAll('"','&quot;')
-    .replaceAll("'",'&#39;');
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
 }
 
-function normalizeLabel(val) {
-  return String(val || '').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
-}
-
-function mapSubjectScores(subjects) {
-  const out = {};
-  (subjects || []).forEach(s => { out[normalizeLabel(s.subject_name)] = Number(s.score); });
-  return out;
+function normKey(val) {
+  return String(val || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
 function pickScore(subjectMap, aliases) {
   for (const alias of aliases) {
-    const key = normalizeLabel(alias);
+    const key = normKey(alias);
     if (subjectMap[key] != null) return subjectMap[key];
     const fuzzy = Object.entries(subjectMap).find(([k]) => k.includes(key) || key.includes(k));
     if (fuzzy) return fuzzy[1];
@@ -1230,49 +1201,35 @@ function pickScore(subjectMap, aliases) {
   return null;
 }
 
-function scoreBand(score) {
-  if (score == null || Number.isNaN(score)) return 'empty-dot';
-  if (score >= 85) return 'excellent';
-  if (score >= 70) return 'verygood';
-  if (score >= 50) return 'good';
-  return 'poor';
-}
-
-function nurseryCellScore(subjectMap, label) {
-  const s = label.toLowerCase();
-  if (s.includes('language') || s.includes('reading') || s.includes('writing') || s.includes('listening')) return pickScore(subjectMap, ['Language & Literacy', 'English Language']);
-  if (s.includes('mathematics')) return pickScore(subjectMap, ['Mathematics', 'Mathematics & Numeracy']);
-  if (s.includes('physical') || s.includes('health') || s.includes('cleanliness') || s.includes('toilet')) return pickScore(subjectMap, ['Physical Education', 'Physical & Health Education', 'Health']);
-  if (s.includes('singing') || s.includes('drawing') || s.includes('shading') || s.includes('poems') || s.includes('rhythms')) return pickScore(subjectMap, ['Creative Arts']);
-  if (s.includes('social') || s.includes('leadership') || s.includes('punctuality') || s.includes('attendance') || s.includes('sharing') || s.includes('relates')) return pickScore(subjectMap, ['Social Studies', 'Social & Emotional Development']);
-  return null;
+function mapSubjectScores(subjects) {
+  const out = {};
+  (subjects || []).forEach(s => { out[normKey(s.subject_name)] = Number(s.score); });
+  return out;
 }
 
 function reportGrade(score) {
-  if (score >= 90) return 'D1';
+  if (score >= 95) return 'D1';
   if (score >= 80) return 'D2';
-  if (score >= 75) return 'C3';
-  if (score >= 65) return 'C4';
-  if (score >= 60) return 'C5';
-  if (score >= 50) return 'C6';
-  if (score >= 45) return 'P7';
+  if (score >= 70) return 'C3';
+  if (score >= 60) return 'C4';
+  if (score >= 50) return 'C5';
+  if (score >= 45) return 'C6';
+  if (score >= 40) return 'P7';
   if (score >= 35) return 'P8';
   return 'F9';
 }
 
 function gradeRemark(grade) {
-  const remarks = {
-    'D1': 'Exceptional',
-    'D2': 'Excellent',
-    'C3': 'Very Good',
-    'C4': 'Good',
-    'C5': 'Fairly Good',
-    'C6': 'Competent',
-    'P7': 'Pass',
-    'P8': 'Weak',
-    'F9': 'Not Achieved'
-  };
-  return remarks[grade] || '';
+  const m = { D1:'Exceptional', D2:'Excellent', C3:'Very Good', C4:'Good', C5:'Fairly Good', C6:'Competent', P7:'Pass', P8:'Weak', F9:'Not Achieved' };
+  return m[grade] || '';
+}
+
+function scoreToBand(score) {
+  if (score == null || Number.isNaN(score)) return '#e0e0e0';
+  if (score >= 85) return '#f5c518';
+  if (score >= 70) return '#dc3545';
+  if (score >= 50) return '#198754';
+  return '#0d6efd';
 }
 
 function reportOutOf(className) {
@@ -1280,204 +1237,327 @@ function reportOutOf(className) {
   return cls ? rankPupils(cls.id).length : '';
 }
 
-function buildNurseryPdfCard(summary, subjects) {
+const REPORT_CSS = `
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#d9d5cc;padding:30px 20px;display:flex;flex-direction:column;gap:30px;align-items:center}
+.card{width:720px;background:#fff;border:2px solid #555;padding:20px 24px 16px;page-break-after:always}
+.school-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.school-center{flex:1;text-align:center}
+.school-name{color:#cc1010;font-weight:900;font-size:21px;letter-spacing:.02em;text-transform:uppercase;line-height:1.1}
+.school-sub{font-size:10px;font-weight:700;color:#111;margin-top:3px;line-height:1.7}
+.report-title{font-weight:900;font-size:13px;letter-spacing:.1em;text-decoration:underline;text-underline-offset:3px;margin-top:4px}
+.photo-box{width:76px;height:92px;border:1.5px solid #777;background:#e8e8e8;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.photo-box img{width:60px;height:60px;object-fit:contain}
+.info-row{display:flex;flex-wrap:wrap;gap:0 20px;font-size:11.5px;font-weight:700;border-top:2px solid #000;border-bottom:2px solid #000;padding:5px 0;margin:7px 0 5px}
+.info-item{display:flex;align-items:center;gap:4px}
+.info-line{display:inline-block;width:90px;border-bottom:1px solid #555;height:14px;vertical-align:bottom}
+.info-line-sm{width:50px}
+.info-line-lg{width:120px}
+.section-title{text-align:center;font-weight:900;font-size:12px;text-decoration:underline;margin:7px 0 4px;text-transform:uppercase;letter-spacing:.07em}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+th,td{border:1.5px solid #444;padding:3px 6px;text-align:center;vertical-align:middle}
+th{font-weight:900;font-size:10.5px;text-transform:uppercase;background:#fff}
+td:first-child{text-align:left;font-weight:700;padding-left:8px}
+tr td{height:20px}
+.agg-row{display:flex;justify-content:center;gap:40px;font-weight:900;font-size:13px;margin:6px 0;align-items:center}
+.agg-item{display:flex;align-items:center;gap:6px}
+.agg-line{display:inline-block;width:48px;border-bottom:1px solid #555;height:14px}
+.grading-box{margin:7px 0 0;font-size:10.5px;font-weight:700;border:1px solid #444;padding:4px 6px}
+.g-row{display:grid;grid-template-columns:80px repeat(8,1fr);gap:0}
+.g-cell{text-align:center;padding:1px 2px;border-right:1px solid #aaa}
+.g-cell:last-child{border-right:none}
+.g-head{font-weight:900;text-align:right;padding-right:6px}
+.cmt-section{margin-top:8px;font-size:11px}
+.cmt-label{font-weight:900}
+.cmt-line{border-bottom:1px solid #666;margin:3px 0;min-height:15px}
+.cmt-dotted{border-bottom:1px dotted #888}
+.sig-row{display:flex;justify-content:flex-end;font-size:10px;color:#444;margin-top:1px}
+.fees-row{display:flex;flex-wrap:wrap;gap:3px 24px;font-size:11px;font-weight:700;margin:5px 0}
+.fees-line{display:inline-block;width:80px;border-bottom:1px solid #555;height:13px;vertical-align:bottom}
+.dates-row{display:flex;justify-content:space-between;font-size:11px;font-weight:900;margin:6px 0}
+.date-line{display:inline-block;width:80px;border-bottom:1px solid #555;height:13px;vertical-align:bottom}
+.note-row{display:flex;justify-content:space-between;align-items:flex-end;margin-top:6px}
+.note-box{font-size:10px;font-weight:700}
+.stamp{width:64px;height:64px;border:2px dashed #aaa;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8.5px;color:#aaa;font-weight:700;text-align:center}
+.motto{text-align:center;font-weight:900;font-size:13px;letter-spacing:.08em;margin-top:7px;border-top:2.5px solid #000;padding-top:6px}
+.key-row{display:flex;gap:18px;font-size:11.5px;font-weight:700;align-items:center;flex-wrap:wrap;margin:6px 0 10px}
+.dot{width:16px;height:16px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle;border:1px solid rgba(0,0,0,.15)}
+.dot-y{background:#f5c518}.dot-r{background:#dc3545}.dot-g{background:#198754}.dot-b{background:#0d6efd}
+.skills-grid{display:grid;grid-template-columns:repeat(5,1fr);border-top:1.5px solid #444;border-left:1.5px solid #444}
+.skill-cell{border-right:1.5px solid #444;border-bottom:1.5px solid #444}
+.skill-label{font-weight:900;font-size:9px;text-align:center;padding:3px 2px;border-bottom:1px solid #ccc;text-transform:capitalize;line-height:1.2;background:#f7f7f7;letter-spacing:.02em}
+.skill-body{position:relative;height:88px;display:flex;align-items:center;justify-content:center;background:#f0f0f0}
+.skill-body .badge-dot{width:16px;height:16px;border-radius:50%;border:1.5px solid rgba(0,0,0,.18);display:inline-block}
+.toolbar{padding:12px 16px;background:#1e3a5f;color:#fff;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10}
+.toolbar strong{flex:1;font-size:13px}
+.toolbar button{border:none;background:rgba(255,255,255,.18);color:#fff;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer}
+@media print{body{background:#fff;padding:0;gap:0}.card{border:none;width:100%;page-break-after:always}.toolbar{display:none}}
+`;
+
+function buildPrimaryReport(summary, subjects) {
   const subjectMap = mapSubjectScores(subjects);
-  const rows = NURSERY_TEMPLATE_ROWS.map(([a,b,c]) => `<tr>
-    <td><b>${escapeHtml(a)}</b></td>
-    <td class="center"><span class="mark-dot ${scoreBand(nurseryCellScore(subjectMap,a))}"></span></td>
-    <td><b>${escapeHtml(b)}</b></td>
-    <td class="center"><span class="mark-dot ${scoreBand(nurseryCellScore(subjectMap,b))}"></span></td>
-    <td><b>${escapeHtml(c)}</b></td>
-    <td class="center"><span class="mark-dot ${scoreBand(nurseryCellScore(subjectMap,c))}"></span></td>
-  </tr>`).join('');
-  return `<section class="sheet">
-    <div class="head"><h1>HILL VIEW NURSERY SCHOOL - NKOOWE</h1><div class="motto">"Plan For Tomorrow"</div><div class="tel">Tel: ___________________</div></div>
-    <div class="bar">END OF TERM INDIVIDUAL ASSESSMENT REPORT</div>
-    <div class="lines3">
-      <div class="line-field"><b>Name:</b> <span class="line">${escapeHtml(summary.pupil_name)}</span></div>
-      <div class="line-field"><b>Term:</b> <span class="line">${REPORT_TERM}</span></div>
-      <div class="line-field"><b>Year:</b> <span class="line">${REPORT_YEAR}</span></div>
+  const commentMap = {};
+  (subjects || []).forEach(s => { if (s.teacher_comment) commentMap[normKey(s.subject_name)] = s.teacher_comment; });
+
+  const subjectRows = PRIMARY_SUBJECTS.map((subj, idx) => {
+    const score = pickScore(subjectMap, SUBJECT_ALIASES[subj] || [subj]);
+    const has = score != null && !Number.isNaN(score);
+    const grade = has ? reportGrade(score) : '';
+    const remark = has ? scoreLabel(score) : '';
+    const comment = has && commentMap[normKey(SUBJECT_ALIASES[subj]?.[0] || subj)] ? escapeHtml(commentMap[normKey(SUBJECT_ALIASES[subj]?.[0] || subj)]) : remark;
+    return `<tr>
+      <td style="width:30%;text-align:left;padding-left:8px">${escapeHtml(subj)}</td>
+      <td>${has ? 100 : ''}</td>
+      <td>${has ? score : ''}</td>
+      <td>${grade}</td>
+      <td>${comment}</td>
+      <td></td>
+    </tr>`;
+  }).join('');
+
+  const total = Number(summary.total_score) || 0;
+  const average = parseFloat(summary.average_score) || 0;
+  const aggregate = PRIMARY_SUBJECTS.reduce((sum, subj) => {
+    const score = pickScore(subjectMap, SUBJECT_ALIASES[subj] || [subj]);
+    return score == null || Number.isNaN(score) ? sum : sum + toAgg(score);
+  }, 0);
+
+  return `<div class="card">
+    <div class="school-header">
+      <img src="badge.png" width="80" height="80" style="flex-shrink:0" alt="Badge">
+      <div class="school-center">
+        <div class="school-name">Hill View Primary School &ndash; Nkoowe</div>
+        <div class="school-sub">
+          Location: 13 Miles Along Kampala &ndash; Hoima Road &nbsp;|&nbsp; P.O Box 76, Wakiso<br>
+          Tel: 0772/ 0701 692 329/ 0774 420 243 &nbsp;&nbsp; Email: hillviewschool1@gmail.com
+        </div>
+        <div class="report-title">Terminal Report</div>
+      </div>
+      <div class="photo-box">
+        ${summary.pupil_avatar ? `<img src="${escapeHtml(summary.pupil_avatar)}" alt="Photo">` : `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`}
+      </div>
     </div>
-    <div class="lines4">
-      <div class="line-field"><b>Class:</b> <span class="line">${escapeHtml(summary.class_name)}</span></div>
-      <div class="line-field"><b>House:</b> <span class="line">${summary.house || ''}</span></div>
-      <div class="line-field"><b>Pay Code:</b> <span class="line">${summary.pay_code || ''}</span></div>
-      <div class="line-field"><b>POSITION:</b> <span class="line">${escapeHtml(summary.position ?? '')}</span></div>
+
+    <div class="info-row">
+      <div class="info-item"><span>Learner's Name</span> <span class="info-line info-line-lg">${escapeHtml(summary.pupil_name)}</span></div>
+      <div class="info-item"><span>Term</span> <span class="info-line info-line-sm">${REPORT_TERM}</span></div>
+      <div class="info-item"><span>Year</span> <span class="info-line info-line-sm">${REPORT_YEAR}</span></div>
+      <div class="info-item"><span>Class</span> <span class="info-line">${escapeHtml(summary.class_name)}</span></div>
+      <div class="info-item"><span>House</span> <span class="info-line">${escapeHtml(summary.house || '')}</span></div>
+      <div class="info-item"><span>School Pay Code</span> <span class="info-line info-line-sm">${escapeHtml(summary.paycode || '')}</span></div>
     </div>
+
+    <div class="section-title">End of Term Performance</div>
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:left;padding-left:8px">Subject</th>
+          <th>Full Marks</th>
+          <th>Marks Scored</th>
+          <th>Grade</th>
+          <th>Remarks</th>
+          <th>Initials</th>
+        </tr>
+      </thead>
+      <tbody>${subjectRows}</tbody>
+    </table>
+
+    <div class="agg-row">
+      <div class="agg-item">AGG: <span class="agg-line">${aggregate}</span></div>
+      <div class="agg-item">DIV: <span class="agg-line">${summary.uneb_grade || ''}</span></div>
+    </div>
+
+    <div class="section-title">Progressive Assessment Records</div>
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:left;padding-left:8px">Subject</th>
+          <th>ENG</th>
+          <th>MTC</th>
+          <th>S.ST and R.E</th>
+          <th>INT. SCIE</th>
+          <th>AGG</th>
+          <th>Division</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>B.O.T</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>Mid Term</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <div class="grading-box">
+      <div class="g-row">
+        <div class="g-head">Grading</div>
+        <div class="g-cell">00&ndash;34</div><div class="g-cell">35&ndash;39</div><div class="g-cell">40&ndash;44</div>
+        <div class="g-cell">45&ndash;49</div><div class="g-cell">50&ndash;59</div><div class="g-cell">60&ndash;69</div>
+        <div class="g-cell">70&ndash;79</div><div class="g-cell">80&ndash;94</div><div class="g-cell">95&ndash;100</div>
+      </div>
+      <div class="g-row" style="margin-top:1px">
+        <div class="g-head">Scale</div>
+        <div class="g-cell">F9</div><div class="g-cell">P8</div><div class="g-cell">P7</div>
+        <div class="g-cell">C6</div><div class="g-cell">C5</div><div class="g-cell">C4</div>
+        <div class="g-cell">C3</div><div class="g-cell">D2</div><div class="g-cell">D1</div>
+      </div>
+    </div>
+
+    <div class="cmt-section">
+      <div style="margin-top:7px"><span class="cmt-label">Class Teacher's Comment: </span><span style="display:inline-block;width:340px;border-bottom:1px solid #666;height:14px;vertical-align:bottom"></span></div>
+      <div class="cmt-line cmt-dotted" style="margin-top:5px"></div>
+      <div class="sig-row">SIGNATURE .....................................</div>
+      <div style="margin:6px 0 2px"><span class="cmt-label">Headteacher's Comment</span> <span style="display:inline-block;width:300px;border-bottom:1px solid #666;height:14px;vertical-align:bottom"></span></div>
+      <div class="cmt-line cmt-dotted"></div>
+      <div class="sig-row">SIGNATURE .....................................</div>
+    </div>
+
+    <div class="fees-row" style="margin-top:7px">
+      <span><b>Requirement Fee:</b> <span class="fees-line">${escapeHtml(summary.req_fee || '')}</span></span>
+      <span><b>Next Term's Fees:</b> <span class="fees-line">${escapeHtml(summary.next_fee || '')}</span></span>
+    </div>
+    <div class="fees-row">
+      <span><b>School Fees Balance</b> <span class="fees-line" style="width:120px">${escapeHtml(summary.balance || '')}</span></span>
+      <span><b>Development:</b> <span class="fees-line" style="width:120px">${escapeHtml(summary.development || '')}</span></span>
+    </div>
+
+    <div class="dates-row">
+      <span>This Term Ended On: <span class="date-line">${escapeHtml(summary.term_ended || '')}</span></span>
+      <span>Next Term Starts On: <span class="date-line">${escapeHtml(summary.next_term || '')}</span></span>
+    </div>
+
+    <div class="note-row">
+      <div class="note-box"><b>Note</b><br>This report is valid only when it bears school stamp</div>
+      <div style="font-size:10px;font-weight:700;align-self:flex-end">School stamp</div>
+      <div class="stamp">School<br>Stamp</div>
+    </div>
+    <div class="motto">Motto: ' Plan For Tomorrow</div>
+  </div>`;
+}
+
+const NURSERY_SKILLS = [
+  { label: 'Toilet habits', subjects: ['Health', 'Health Education'] },
+  { label: 'Singing', subjects: ['Creative Arts', 'Music', 'Singing'] },
+  { label: 'Colours', subjects: ['Creative Arts', 'Art'] },
+  { label: 'Writing', subjects: ['Writing', 'Literacy'] },
+  { label: 'Sharing', subjects: ['Social Development', 'Social Studies', 'Sharing'] },
+  { label: 'Body hygiene', subjects: ['Health', 'Health Education', 'Personal Hygiene'] },
+  { label: 'Cleanliness', subjects: ['Cleanliness', 'Hygiene'] },
+  { label: 'Attendance', subjects: [] },
+  { label: 'Behaviour', subjects: ['Behaviour', 'Conduct'] },
+  { label: 'Counting', subjects: ['Numeracy', 'Mathematics', 'Counting'] },
+];
+
+function buildNurseryReport(summary, subjects) {
+  const subjectMap = mapSubjectScores(subjects);
+
+  const skillCells = NURSERY_SKILLS.map(skill => {
+    const score = skill.subjects.length ? pickScore(subjectMap, skill.subjects) : null;
+    const bandColor = scoreToBand(score);
+    return `<div class="skill-cell">
+      <div class="skill-label">${skill.label}</div>
+      <div class="skill-body">
+        <span class="badge-dot" style="background:${bandColor}"></span>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `<div class="card">
+    <div class="school-header">
+      <img src="badge.png" width="80" height="80" style="flex-shrink:0" alt="Badge">
+      <div class="school-center">
+        <div class="school-name" style="font-size:18px">Hill View Nursery School &ndash; Nkoowe</div>
+        <div class="school-sub">
+          Location: 13 Miles Along Kampala &ndash; Hoima Road &nbsp;|&nbsp; P.O Box 76, Wakiso<br>
+          Tel: 0772/ 0701 692 329/ 0774 420 243 &nbsp;&nbsp; Email: hillviewschool1@gmail.com
+        </div>
+        <div class="report-title">Terminal Report</div>
+      </div>
+      <div class="photo-box">
+        ${summary.pupil_avatar ? `<img src="${escapeHtml(summary.pupil_avatar)}" alt="Photo">` : `<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>`}
+      </div>
+    </div>
+
+    <div class="info-row">
+      <div class="info-item"><span>Learner's Name:</span> <span class="info-line info-line-lg">${escapeHtml(summary.pupil_name)}</span></div>
+      <div class="info-item"><span>Term</span> <span class="info-line info-line-sm">${REPORT_TERM}</span></div>
+      <div class="info-item"><span>Year</span> <span class="info-line info-line-sm">${REPORT_YEAR}</span></div>
+      <div class="info-item"><span>Class</span> <span class="info-line">${escapeHtml(summary.class_name)}</span></div>
+      <div class="info-item"><span>House</span> <span class="info-line">${escapeHtml(summary.house || '')}</span></div>
+      <div class="info-item"><span>School Pay Code</span> <span class="info-line info-line-sm">${escapeHtml(summary.paycode || '')}</span></div>
+    </div>
+
     <div class="key-row">
-      <b style="font-size:12px">KEY:</b>
+      <b style="font-size:12px">00 KEY</b>
       <span><span class="dot dot-y"></span><b>Very Good</b></span>
       <span><span class="dot dot-r"></span><b>Good</b></span>
       <span><span class="dot dot-g"></span><b>Needs Improvement</b></span>
       <span><span class="dot dot-b"></span><b>Tries</b></span>
     </div>
-    <table class="tbl">
-      <thead><tr><th>LEARNING AREA</th><th style="width:36px"></th><th>SKILLS</th><th style="width:36px"></th><th>HABITS</th><th style="width:36px"></th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    <div class="comment"><div class="label">Teacher's Comment:</div><div class="lineblock"></div><div class="meta"><div>Name: _____________________________</div><div>Signature: ___________________</div></div></div>
-    <div class="comment"><div class="label">Head Teacher's Comment:</div><div class="lineblock"></div><div class="meta"><div>Name: _____________________________</div><div>Signature: ___________________</div></div></div>
-    <div class="fees-row">
-      <span><b>Requirement Fee:</b> <span class="fees-line">${summary.req_fee || ''}</span></span>
-      <span><b>Next Term's Fees:</b> <span class="fees-line">${summary.next_fee || ''}</span></span>
+
+    <div class="skills-grid">${skillCells}</div>
+
+    <div class="cmt-section" style="margin-top:10px">
+      <div><span class="cmt-label">Class Teacher's Comment: </span><span style="display:inline-block;width:320px;border-bottom:1px solid #666;height:14px;vertical-align:bottom"></span></div>
+      <div class="cmt-line cmt-dotted" style="margin-top:6px"></div>
+      <div class="sig-row">SIGNATURE .....................................</div>
+      <div style="margin:6px 0 2px"><span class="cmt-label">Headteacher's Comment</span> <span style="display:inline-block;width:290px;border-bottom:1px solid #666;height:14px;vertical-align:bottom"></span></div>
+      <div class="cmt-line cmt-dotted"></div>
+      <div class="sig-row">SIGNATURE .....................................</div>
+    </div>
+
+    <div class="fees-row" style="margin-top:7px">
+      <span><b>Requirement Fee:</b> <span class="fees-line">${escapeHtml(summary.req_fee || '')}</span></span>
+      <span><b>Next Term's Fees:</b> <span class="fees-line">${escapeHtml(summary.next_fee || '')}</span></span>
     </div>
     <div class="fees-row">
-      <span><b>School Fees Balance:</b> <span class="fees-line" style="width:120px">${summary.balance || ''}</span></span>
-      <span><b>Development:</b> <span class="fees-line" style="width:120px">${summary.development || ''}</span></span>
+      <span><b>School Fees Balance</b> <span class="fees-line" style="width:120px">${escapeHtml(summary.balance || '')}</span></span>
+      <span><b>Development:</b> <span class="fees-line" style="width:120px">${escapeHtml(summary.development || '')}</span></span>
     </div>
     <div class="dates-row">
-      <span>This Term Ended On: <span class="date-line">${summary.term_ended || ''}</span></span>
-      <span>Next Term Starts On: <span class="date-line">${summary.next_term || ''}</span></span>
+      <span>This Term Ended On: <span class="date-line">${escapeHtml(summary.term_ended || '')}</span></span>
+      <span>Next Term Starts On: <span class="date-line">${escapeHtml(summary.next_term || '')}</span></span>
     </div>
-    <div class="note-row">
-      <div class="note-box"><b>Note:</b> This report is valid only when it bears school stamp</div>
-      <div class="stamp">School<br>Stamp</div>
-    </div>
-    <div class="motto">Motto: 'Plan For Tomorrow'</div>
-  </section>`;
+  </div>`;
 }
 
-function buildPrimaryPdfCard(summary, subjects, progressiveScores) {
-  const subjectMap = mapSubjectScores(subjects);
-  const commentMap = {};
-  (subjects || []).forEach(s => { if (s.teacher_comment) commentMap[normalizeLabel(s.subject_name)] = s.teacher_comment; });
-
-  const rows = PRIMARY_REPORT_SUBJECTS.map((subject, idx) => {
-    const score = pickScore(subjectMap, [subject]);
-    const has = score != null && !Number.isNaN(score);
-    const comment = escapeHtml(commentMap[normalizeLabel(subject)] || (has ? scoreLabel(score) : ''));
-    return `<tr>
-      <td class="center">${idx + 1}</td>
-      <td>${escapeHtml(subject)}</td>
-      <td class="center">${has ? score : ''}</td>
-      <td class="center">${has ? 100 : ''}</td>
-      <td class="center">${has ? reportGrade(score) : ''}</td>
-      <td class="center">${has ? toAgg(score) : ''}</td>
-      <td>${comment}</td>
-    </tr>`;
-  }).join('');
-  const total = Number(summary.total_score) || 0;
-  const average = parseFloat(summary.average_score) || 0;
-  const aggregate = PRIMARY_REPORT_SUBJECTS.reduce((sum, subject) => {
-    const score = pickScore(subjectMap, [subject]);
-    return score == null || Number.isNaN(score) ? sum : sum + toAgg(score);
-  }, 0);
-
-  // Progressive Assessment Records
-  const progRows = PRIMARY_REPORT_SUBJECTS.map(subject => {
-    const bot = progressiveScores ? pickScore(progressiveScores.bot, [subject]) : null;
-    const mid = progressiveScores ? pickScore(progressiveScores.mid, [subject]) : null;
-    return `<tr>
-      <td style="text-align:left;font-weight:700;padding-left:8px">${escapeHtml(subject)}</td>
-      <td>${bot != null && !Number.isNaN(bot) ? bot : ''}</td>
-      <td>${mid != null && !Number.isNaN(mid) ? mid : ''}</td>
-      <td></td>
-      <td></td>
-    </tr>`;
-  }).join('');
-
-  return `<section class="sheet">
-    <div class="head"><h1>HILL VIEW PRIMARY SCHOOL - NKOOWE</h1><div class="motto">"Plan For Tomorrow"</div><div class="tel">Tel: ___________________</div></div>
-    <div class="bar">END OF TERM ACADEMIC REPORT CARD - PRIMARY SECTION</div>
-    <div class="lines3">
-      <div class="line-field"><b>Name:</b> <span class="line">${escapeHtml(summary.pupil_name)}</span></div>
-      <div class="line-field"><b>Term:</b> <span class="line">${REPORT_TERM}</span></div>
-      <div class="line-field"><b>Year:</b> <span class="line">${REPORT_YEAR}</span></div>
-    </div>
-    <div class="lines4">
-      <div class="line-field"><b>Class:</b> <span class="line">${escapeHtml(summary.class_name)}</span></div>
-      <div class="line-field"><b>House:</b> <span class="line">${summary.house || ''}</span></div>
-      <div class="line-field"><b>Pay Code:</b> <span class="line">${summary.pay_code || ''}</span></div>
-      <div class="line-field"><b>Stream:</b> <span class="line">${REPORT_STREAM}</span></div>
-    </div>
-    <div class="lines3">
-      <div class="line-field"><b>Position:</b> <span class="line">${escapeHtml(summary.position ?? '')}</span></div>
-      <div class="line-field"><b>Out of:</b> <span class="line">${escapeHtml(reportOutOf(summary.class_name))}</span></div>
-    </div>
-    <div class="grade-box">
-      <div class="cap">GRADING SCALE:</div>
-      <table><tbody>
-        <tr><th>D1</th><th>D2</th><th>C3</th><th>C4</th><th>C5</th><th>C6</th><th>P7</th><th>P8</th><th>F9</th></tr>
-        <tr><td>95-100</td><td>80-94</td><td>70-79</td><td>65-69</td><td>60-64</td><td>50-59</td><td>45-49</td><td>35-44</td><td>00-34</td></tr>
-        <tr><td>Distinction</td><td>Distinction</td><td>Credit</td><td>Credit</td><td>Credit</td><td>Credit</td><td>Pass</td><td>Pass</td><td>Fail</td></tr>
-      </tbody></table>
-    </div>
-    <table class="tbl">
-      <thead><tr><th style="width:30px">#</th><th>SUBJECT</th><th style="width:74px">MARKS<br>SCORED</th><th style="width:48px">OUT<br>OF</th><th style="width:44px">GRADE</th><th style="width:40px">AGG</th><th style="width:128px">TEACHER'S REMARKS</th></tr></thead>
-      <tbody>
-        ${rows}
-        <tr>
-          <td colspan="2" class="right"><b>TOTAL / AGGREGATE</b></td>
-          <td class="center"><b>${total}</b></td>
-          <td></td>
-          <td class="center"><b>${escapeHtml(summary.uneb_grade || '')}</b></td>
-          <td class="center"><b>${aggregate}</b></td>
-          <td class="center"><b>${average.toFixed(1)}%</b></td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="section-title">PROGRESSIVE ASSESSMENT RECORDS</div>
-    <table class="tbl" style="margin-bottom:12px">
-      <thead><tr><th style="text-align:left;padding-left:8px;width:30%">Subject</th><th>B.O.T</th><th>Mid Term</th><th>AGG</th><th>Division</th></tr></thead>
-      <tbody>${progRows}</tbody>
-    </table>
-    <div class="comment"><div class="label">Class Teacher's Comment:</div><div class="lineblock"></div><div class="meta"><div>Name: _____________________________</div><div>Signature: ___________________</div></div></div>
-    <div class="comment"><div class="label">Head Teacher's Comment:</div><div class="lineblock"></div><div class="meta"><div>Name: _____________________________</div><div>Signature: ___________________</div></div></div>
-    <div class="fees-row">
-      <span><b>Requirement Fee:</b> <span class="fees-line">${summary.req_fee || ''}</span></span>
-      <span><b>Next Term's Fees:</b> <span class="fees-line">${summary.next_fee || ''}</span></span>
-    </div>
-    <div class="fees-row">
-      <span><b>School Fees Balance:</b> <span class="fees-line" style="width:120px">${summary.balance || ''}</span></span>
-      <span><b>Development:</b> <span class="fees-line" style="width:120px">${summary.development || ''}</span></span>
-    </div>
-    <div class="dates-row">
-      <span>This Term Ended On: <span class="date-line">${summary.term_ended || ''}</span></span>
-      <span>Next Term Starts On: <span class="date-line">${summary.next_term || ''}</span></span>
-    </div>
-    <div class="note-row">
-      <div class="note-box"><b>Note:</b> This report is valid only when it bears school stamp</div>
-      <div class="stamp">School<br>Stamp</div>
-    </div>
-    <div class="motto">Motto: 'Plan For Tomorrow'</div>
-  </section>`;
-}
-
-function buildReportCardHtml(summary, subjects, progressiveScores) {
+function buildReportHtml(summary, subjects) {
   const isNursery = summary.class_name && summary.class_name.startsWith('KG');
-  return isNursery ? buildNurseryPdfCard(summary, subjects) : buildPrimaryPdfCard(summary, subjects, progressiveScores);
+  return isNursery ? buildNurseryReport(summary, subjects) : buildPrimaryReport(summary, subjects);
 }
 
-function openReportWindow(title, label, bodyHtml) {
+function openReportWindow(title, bodyHtml) {
   const w = window.open('', '_blank');
-  w.document.write(`<!DOCTYPE html><html><head><title>${escapeHtml(title)}</title><style>${REPORT_DOC_CSS}</style></head><body><div class="toolbar noprint"><strong>${escapeHtml(label)}</strong><button onclick="window.print()">Print / Save PDF</button></div>${bodyHtml}</body></html>`);
+  w.document.write(`<!DOCTYPE html><html><head><title>${escapeHtml(title)}</title><style>${REPORT_CSS}</style></head><body><div class="toolbar noprint"><strong>${escapeHtml(title)}</strong><button onclick="window.print()">Print / Save PDF</button></div>${bodyHtml}</body></html>`);
   w.document.close();
 }
 
-function printReport(summary, subjects, progressiveScores) {
-  openReportWindow(`Report - ${summary.pupil_name}`, `Hill View Report Card - ${summary.pupil_name}`, buildReportCardHtml(summary, subjects, progressiveScores));
+function printReport(summary, subjects) {
+  const title = `Hill View Report Card - ${summary.pupil_name}`;
+  openReportWindow(title, buildReportHtml(summary, subjects));
 }
 
-async function generateAllReports(filterClass) {
-  const pupils = filterClass ? S.pupils.filter(p=>p.class_id===filterClass) : S.pupils;
-  if(!pupils.length){alert('No pupils to generate reports for.');return;}
+function generateAllReports(filterClass) {
+  const pupils = filterClass ? S.pupils.filter(p => p.class_id === filterClass) : S.pupils;
+  if (!pupils.length) { alert('No pupils to generate reports for.'); return; }
   const pages = pupils.map(p => {
-    const cls = S.classes.find(c=>c.id===p.class_id);
+    const cls = S.classes.find(c => c.id === p.class_id);
     const subs = classSubs(p.class_id);
     const ranked = rankPupils(p.class_id);
-    const rp = ranked.find(r=>r.id===p.id)||{pos:'-',total:0,avg:0};
-    const isP7 = cls && isP7Class(cls.name);
+    const rp = ranked.find(r => r.id === p.id) || { pos: '-', total: 0, avg: 0 };
+    const isP7 = cls && /^P7/.test(cls.name);
     const summary = {
       pupil_name: p.name,
+      pupil_avatar: p.avatar || null,
       class_name: cls?.name || '',
+      house: p.house || '',
+      paycode: p.paycode || '',
       total_score: rp.total,
       average_score: rp.avg,
       position: rp.pos,
-      uneb_grade: isP7 ? pleCalc(p.id,p.class_id).grade : null
+      uneb_grade: isP7 ? pleCalc(p.id, p.class_id).grade : null,
     };
-    return buildReportCardHtml(summary, subs.map(s=>({subject_name:s.name,score:getScore(p.id,s.id)})));
+    return buildReportHtml(summary, subs.map(s => ({ subject_name: s.name, score: getScore(p.id, s.id) })));
   });
-  openReportWindow('All Reports - Hill View', `Hill View - All Reports (${pupils.length} pupils)`, pages.join(''));
+  openReportWindow(`Hill View - All Reports (${pupils.length} pupils)`, pages.join(''));
 }
 
 
@@ -1639,7 +1719,7 @@ function MarksTable(classId, readOnly, showAddPupil) {
     const tdB=e('td',{class:'act-col'});
     const btn=e('button',{class:'btn btn-ghost btn-sm'}); btn.textContent='PDF';
     btn.addEventListener('click',()=>{
-      const sum={pupil_name:p.name,class_name:cls?.name||'',total_score:p.total,average_score:p.avg,position:p.pos,uneb_grade:p7?pleCalc(p.id,classId).grade:null};
+      const sum={pupil_name:p.name,pupil_avatar:p.avatar||null,class_name:cls?.name||'',house:p.house||'',paycode:p.paycode||'',total_score:p.total,average_score:p.avg,position:p.pos,uneb_grade:p7?pleCalc(p.id,classId).grade:null};
       printReport(sum, subs.map(s=>({subject_name:s.name,score:getScore(p.id,s.id)})));
     }); tdB.appendChild(btn); tr.appendChild(tdB);
 
@@ -1751,71 +1831,280 @@ function ViewOverview() {
 }
 
 // ══════════════════════════════════════════════════
-//  VIEW: CLASS MARKS (admin + teacher)
+//  VIEW: ADMIN — CLASS MARKS (admin-only)
+//  Admin can pick any class
 // ══════════════════════════════════════════════════
 function ViewMarks() {
-  const isAdmin=S.user.role==='admin';
-  // Teachers can have multiple classes - get first assigned class or fall back to class_id
-  const teacherClassIds = S.teacherClassIds || [];
-  const classId = isAdmin ? (S.selClass || S.classes[0]?.id) : (teacherClassIds[0] || S.user.class_id);
-  const cls=S.classes.find(c=>c.id===classId);
-  const nPending=Object.keys(S.pending).length;
-  const hasPending=nPending>0;
-  const pups=S.pupils.filter(p=>p.class_id===classId);
-  const c=d('content');
-  const hdr=d('hdr-row');
-  const h=e('h2',{class:'page-h',style:'margin-bottom:0'});
-  h.textContent=isAdmin?'Class Marks':`${cls?.name||''} — Enter Marks`; hdr.appendChild(h);
-  if(isAdmin){
-    const sel=e('select',{style:'width:auto'});
-    S.classes.forEach(cl=>{const o=e('option',{value:cl.id});o.textContent=cl.name;if(cl.id===classId)o.selected=true;sel.appendChild(o);});
-    sel.addEventListener('change',ev=>{S.selClass=ev.target.value;S.pending={};S.saveMsg=null;render();});
-    hdr.appendChild(sel);
-  } else if (teacherClassIds.length > 1) {
-    // Multiple classes - show dropdown
-    const sel=e('select',{style:'width:auto'});
-    teacherClassIds.forEach(tcId=>{const cl=S.classes.find(c=>c.id===tcId); if(cl){const o=e('option',{value:cl.id});o.textContent=cl.name;if(cl.id===S.selClass)o.selected=true;sel.appendChild(o);}});
-    sel.addEventListener('change',ev=>{S.selClass=ev.target.value;S.pending={};S.saveMsg=null;render();});
-    hdr.appendChild(sel);
-  }
-  const pills=d('','display:flex;gap:7px;flex-wrap:wrap;align-items:center');
-  if(cls){const p=e('span',{class:'pill'});p.textContent=resolveLevel(cls.name).toUpperCase();pills.appendChild(p);}
-  const pc=e('span',{class:'pill pill-grey'});pc.textContent=`${pups.length} pupils`;pills.appendChild(pc);
-  const sc=e('span',{class:'pill pill-grey'});sc.textContent=`${classSubs(classId).length} subjects`;pills.appendChild(sc);
-  if(hasPending){const ch=e('span',{class:'pill',style:'background:#fff3cd;color:#7a5300'});ch.innerHTML=`&#9679; ${nPending} unsaved`;pills.appendChild(ch);}
+  let classId = S.selClass || S.classes[0]?.id;
+  const cls = S.classes.find(c => c.id === classId);
+  const nPending = Object.keys(S.pending).length;
+  const hasPending = nPending > 0;
+  const pups = S.pupils.filter(p => p.class_id === classId);
+
+  const c = d('content');
+  const hdr = d('hdr-row');
+  const h = e('h2', { class: 'page-h', style: 'margin-bottom:0' });
+  h.textContent = 'Class Marks';
+  hdr.appendChild(h);
+
+  const sel = e('select', { style: 'width:auto' });
+  S.classes.forEach(cl => {
+    const o = e('option', { value: cl.id });
+    o.textContent = cl.name;
+    if (cl.id === classId) o.selected = true;
+    sel.appendChild(o);
+  });
+  sel.addEventListener('change', ev => {
+    S.selClass = ev.target.value;
+    S.pending = {};
+    S.saveMsg = null;
+    render();
+  });
+  hdr.appendChild(sel);
+
+  const pills = d('', 'display:flex;gap:7px;flex-wrap:wrap;align-items:center');
+  if (cls) { const p = e('span', { class: 'pill' }); p.textContent = resolveLevel(cls.name).toUpperCase(); pills.appendChild(p); }
+  const pc = e('span', { class: 'pill pill-grey' }); pc.textContent = `${pups.length} pupils`; pills.appendChild(pc);
+  const sc = e('span', { class: 'pill pill-grey' }); sc.textContent = `${classSubs(classId).length} subjects`; pills.appendChild(sc);
+  if (hasPending) { const ch = e('span', { class: 'pill', style: 'background:#fff3cd;color:#7a5300' }); ch.innerHTML = `&#9679; ${nPending} unsaved`; pills.appendChild(ch); }
   hdr.appendChild(pills); c.appendChild(hdr);
-  const acts=d('marks-actions');
-  const saveBtn=e('button',{class:'btn btn-primary'});
-  saveBtn.style.cssText='min-width:120px;';
-  saveBtn.disabled=S.saving;
-  saveBtn.innerHTML=S.saving?'<span class="spin"></span> Saving...':'Save Marks';
-  saveBtn.addEventListener('click',saveMarks); acts.appendChild(saveBtn);
-  const countEl=e('span',{style:'font-size:12px;color:var(--muted)'});
-  countEl.textContent=nPending>0?`${nPending} unsaved`:'Tab / Enter moves between cells';
+
+  const acts = d('marks-actions');
+  const saveBtn = e('button', { class: 'btn btn-primary' });
+  saveBtn.style.cssText = 'min-width:120px;';
+  saveBtn.disabled = S.saving;
+  saveBtn.innerHTML = S.saving ? '<span class="spin"></span> Saving...' : 'Save Marks';
+  saveBtn.addEventListener('click', saveMarks); acts.appendChild(saveBtn);
+  const countEl = e('span', { style: 'font-size:12px;color:var(--muted)' });
+  countEl.textContent = nPending > 0 ? `${nPending} unsaved` : 'Tab / Enter moves between cells';
   acts.appendChild(countEl);
-  if(S.saveMsg){const msg=e('span',{class:S.saveMsg.startsWith('Error')?'msg-err':'msg-ok'});msg.textContent=S.saveMsg;acts.appendChild(msg);}
+  if (S.saveMsg) { const msg = e('span', { class: S.saveMsg.startsWith('Error') ? 'msg-err' : 'msg-ok' }); msg.textContent = S.saveMsg; acts.appendChild(msg); }
   c.appendChild(acts);
-  c.appendChild(MarksTable(classId,false,true));
+  c.appendChild(MarksTable(classId, false, true));
   return c;
 }
 
 // ══════════════════════════════════════════════════
-//  VIEW: TEACHER SUMMARY
+//  VIEW: TEACHER — CLASS MARKS (teacher-only)
+//  Only shows classes assigned via teacher_classes
 // ══════════════════════════════════════════════════
-function ViewSummary() {
-  const classId=S.user.class_id;
-  const cls=S.classes.find(c=>c.id===classId);
-  const ranked=rankPupils(classId);
-  const clsAvg=ranked.length?(ranked.reduce((a,p)=>a+p.avg,0)/ranked.length).toFixed(1):'–';
+function TeacherMarks() {
+  const tcIds = S.teacherClassIds || [];
+  if (!tcIds.length) {
+    const c = d('content');
+    const h = e('h2', { class: 'page-h' }); h.textContent = 'Enter Marks'; c.appendChild(h);
+    const msg = d('empty');
+    msg.innerHTML = '<span class="empty-icon">📋</span>No classes assigned to you. Contact an administrator.';
+    c.appendChild(msg);
+    return c;
+  }
 
-  const c=d('content');
-  const h=e('h2',{class:'page-h'}); h.textContent=`${cls?.name||''} — Summary`; c.appendChild(h);
-  const mg=d('mc-grid','grid-template-columns:repeat(3,minmax(0,1fr))');
-  [{val:S.pupils.filter(p=>p.class_id===classId).length,lbl:'Pupils'},{val:clsAvg+'%',lbl:'Class average'},{val:ranked[0]?ranked[0].avg.toFixed(1)+'%':'–',lbl:'Top score'}]
-  .forEach(({val,lbl})=>{const mc=d('mc');const mv=e('div',{class:'mc-val'});mv.textContent=val;mc.appendChild(mv);const ml=e('div',{class:'mc-lbl'});ml.textContent=lbl;mc.appendChild(ml);mg.appendChild(mc);});
+  let classId = S.selClass || tcIds[0];
+  const cls = S.classes.find(cc => cc.id === classId);
+  const classPupils = S.pupils.filter(p => p.class_id === classId);
+  const subs = classSubs(classId);
+  const nPending = Object.keys(S.pending).length;
+  const hasPending = nPending > 0;
+
+  const c = d('content');
+  const hdr = d('hdr-row');
+  const h = e('h2', { class: 'page-h', style: 'margin-bottom:0' });
+  h.textContent = `${cls?.name || ''} — Enter Marks`;
+  hdr.appendChild(h);
+
+  // Class dropdown (always show for teachers with assigned classes)
+  if (tcIds.length >= 1) {
+    const sel = e('select', { style: 'width:auto' });
+    tcIds.forEach(tcId => {
+      const cl = S.classes.find(cc => cc.id === tcId);
+      if (cl) {
+        const o = e('option', { value: cl.id });
+        o.textContent = cl.name;
+        if (cl.id === classId) o.selected = true;
+        sel.appendChild(o);
+      }
+    });
+    sel.addEventListener('change', ev => {
+      S.selClass = ev.target.value;
+      S.pending = {};
+      S.saveMsg = null;
+      render();
+    });
+    hdr.appendChild(sel);
+  }
+
+  const pills = d('', 'display:flex;gap:7px;flex-wrap:wrap;align-items:center');
+  if (cls) {
+    const p = e('span', { class: 'pill' });
+    p.textContent = resolveLevel(cls.name).toUpperCase();
+    pills.appendChild(p);
+  }
+  const pc = e('span', { class: 'pill pill-grey' });
+  pc.textContent = `${classPupils.length} pupils`;
+  pills.appendChild(pc);
+  const sc = e('span', { class: 'pill pill-grey' });
+  sc.textContent = `${subs.length} subjects`;
+  pills.appendChild(sc);
+  if (hasPending) {
+    const ch = e('span', { class: 'pill', style: 'background:#fff3cd;color:#7a5300' });
+    ch.innerHTML = `&#9679; ${nPending} unsaved`;
+    pills.appendChild(ch);
+  }
+  hdr.appendChild(pills);
+  c.appendChild(hdr);
+
+  const acts = d('marks-actions');
+  const saveBtn = e('button', { class: 'btn btn-primary' });
+  saveBtn.style.cssText = 'min-width:120px;';
+  saveBtn.disabled = S.saving;
+  saveBtn.innerHTML = S.saving ? '<span class="spin"></span> Saving...' : 'Save Marks';
+  saveBtn.addEventListener('click', saveMarks);
+  acts.appendChild(saveBtn);
+  const countEl = e('span', { style: 'font-size:12px;color:var(--muted)' });
+  countEl.textContent = nPending > 0 ? `${nPending} unsaved` : 'Tab / Enter moves between cells';
+  acts.appendChild(countEl);
+  if (S.saveMsg) {
+    const msg = e('span', { class: S.saveMsg.startsWith('Error') ? 'msg-err' : 'msg-ok' });
+    msg.textContent = S.saveMsg;
+    acts.appendChild(msg);
+  }
+  c.appendChild(acts);
+  c.appendChild(MarksTable(classId, false, true));
+  return c;
+}
+
+// ══════════════════════════════════════════════════
+//  VIEW: TEACHER — SUMMARY (teacher-only)
+//  Shows analytics only for assigned classes
+// ══════════════════════════════════════════════════
+function TeacherSummary() {
+  const tcIds = S.teacherClassIds || [];
+  if (!tcIds.length) {
+    const c = d('content');
+    const h = e('h2', { class: 'page-h' }); h.textContent = 'Summary'; c.appendChild(h);
+    const msg = d('empty');
+    msg.innerHTML = '<span class="empty-icon">📊</span>No classes assigned to you.';
+    c.appendChild(msg);
+    return c;
+  }
+
+  let classId = S.selClass || tcIds[0];
+  const cls = S.classes.find(cc => cc.id === classId);
+  const ranked = rankPupils(classId);
+  const classPupils = S.pupils.filter(p => p.class_id === classId);
+  const subs = classSubs(classId);
+  const clsAvg = ranked.length ? (ranked.reduce((a, p) => a + p.avg, 0) / ranked.length).toFixed(1) : '–';
+  const topPupil = ranked.length ? ranked[0].name : '–';
+  const weakest = ranked.length ? ranked[ranked.length - 1].name : '–';
+
+  const c = d('content');
+  const hdr = d('hdr-row');
+  const h = e('h2', { class: 'page-h', style: 'margin-bottom:0' });
+  h.textContent = `${cls?.name || ''} — Summary`;
+  hdr.appendChild(h);
+
+  // Class dropdown
+  if (tcIds.length >= 1) {
+    const sel = e('select', { style: 'width:auto' });
+    tcIds.forEach(tcId => {
+      const cl = S.classes.find(cc => cc.id === tcId);
+      if (cl) {
+        const o = e('option', { value: cl.id });
+        o.textContent = cl.name;
+        if (cl.id === classId) o.selected = true;
+        sel.appendChild(o);
+      }
+    });
+    sel.addEventListener('change', ev => {
+      S.selClass = ev.target.value;
+      render();
+    });
+    hdr.appendChild(sel);
+  }
+
+  const pills = d('', 'display:flex;gap:7px;flex-wrap:wrap;align-items:center');
+  if (cls) {
+    const p = e('span', { class: 'pill' });
+    p.textContent = resolveLevel(cls.name).toUpperCase();
+    pills.appendChild(p);
+  }
+  const pc = e('span', { class: 'pill pill-grey' });
+  pc.textContent = `${classPupils.length} pupils`;
+  pills.appendChild(pc);
+  const sc = e('span', { class: 'pill pill-grey' });
+  sc.textContent = `${subs.length} subjects`;
+  pills.appendChild(sc);
+  hdr.appendChild(pills);
+  c.appendChild(hdr);
+
+  // Metric cards
+  const mg = d('mc-grid', 'grid-template-columns:repeat(4,minmax(0,1fr))');
+  [
+    { val: classPupils.length, lbl: 'Pupils' },
+    { val: clsAvg + '%', lbl: 'Class Average' },
+    { val: ranked.length ? ranked[0].avg.toFixed(1) + '%' : '–', lbl: 'Top Score' },
+    { val: subs.length, lbl: 'Subjects' },
+  ].forEach(({ val, lbl }) => {
+    const mc = d('mc');
+    const mv = e('div', { class: 'mc-val' }); mv.textContent = val; mc.appendChild(mv);
+    const ml = e('div', { class: 'mc-lbl' }); ml.textContent = lbl; mc.appendChild(ml);
+    mg.appendChild(mc);
+  });
   c.appendChild(mg);
-  const sh=e('h3',{class:'section-h',style:'margin-top:8px'}); sh.textContent='Pupil Rankings'; c.appendChild(sh);
-  c.appendChild(MarksTable(classId,true,false));
+
+  // Top & Weakest pupil cards
+  const twoCol = d('two-col');
+  const topCard = d('card');
+  const thTop = e('h3', { class: 'section-h' }); thTop.textContent = 'Top Performer'; topCard.appendChild(thTop);
+  const topName = e('div', { style: 'font-size:18px;font-weight:700;color:var(--primary)' });
+  topName.textContent = topPupil; topCard.appendChild(topName);
+  const topAvg = e('div', { style: 'font-size:13px;color:var(--muted);margin-top:4px' });
+  topAvg.textContent = ranked.length ? `Average: ${ranked[0].avg.toFixed(1)}%` : '—';
+  topCard.appendChild(topAvg);
+  twoCol.appendChild(topCard);
+
+  const weakCard = d('card');
+  const thWeak = e('h3', { class: 'section-h' }); thWeak.textContent = 'Needs Support'; weakCard.appendChild(thWeak);
+  const weakName = e('div', { style: 'font-size:18px;font-weight:700;color:var(--danger)' });
+  weakName.textContent = weakest; weakCard.appendChild(weakName);
+  const weakAvg = e('div', { style: 'font-size:13px;color:var(--muted);margin-top:4px' });
+  weakAvg.textContent = ranked.length ? `Average: ${ranked[ranked.length - 1].avg.toFixed(1)}%` : '—';
+  weakCard.appendChild(weakAvg);
+  twoCol.appendChild(weakCard);
+  c.appendChild(twoCol);
+
+  // Subject performance breakdown
+  if (subs.length && ranked.length) {
+    const subPerfCard = d('card');
+    const shSub = e('h3', { class: 'section-h' }); shSub.textContent = 'Subject Averages'; subPerfCard.appendChild(shSub);
+    const subWrap = d('tbl-wrap');
+    const subTbl = document.createElement('table');
+    const subThead = document.createElement('thead'), subHr = document.createElement('tr');
+    ['Subject', 'Class Average', 'Highest', 'Lowest'].forEach(txt => {
+      const th = document.createElement('th'); th.textContent = txt; subHr.appendChild(th);
+    });
+    subThead.appendChild(subHr); subTbl.appendChild(subThead);
+    const subTbody = document.createElement('tbody');
+    subs.forEach(s => {
+      const scores = ranked.map(p => getScore(p.id, s.id));
+      const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+      const tr = document.createElement('tr');
+      const tdN = document.createElement('td'); tdN.textContent = s.name; tdN.style.fontWeight = '600'; tr.appendChild(tdN);
+      const tdA = document.createElement('td');
+      const avgSpan = e('span', { class: `sb ${scoreClass(avg)}` });
+      avgSpan.textContent = avg.toFixed(1) + '%'; tdA.appendChild(avgSpan); tr.appendChild(tdA);
+      const tdH = document.createElement('td'); tdH.textContent = Math.max(...scores); tr.appendChild(tdH);
+      const tdL = document.createElement('td'); tdL.textContent = Math.min(...scores); tr.appendChild(tdL);
+      subTbody.appendChild(tr);
+    });
+    subTbl.appendChild(subTbody); subWrap.appendChild(subTbl); subPerfCard.appendChild(subWrap);
+    c.appendChild(subPerfCard);
+  }
+
+  // Pupil Rankings
+  const sh = e('h3', { class: 'section-h', style: 'margin-top:18px' });
+  sh.textContent = 'Pupil Rankings'; c.appendChild(sh);
+  c.appendChild(MarksTable(classId, true, false));
   return c;
 }
 
@@ -1848,6 +2137,66 @@ function ViewAllClasses() {
 }
 
 // ══════════════════════════════════════════════════
+//  VIEW: SETTINGS (admin-only)
+// ══════════════════════════════════════════════════
+function ViewSettings() {
+  const s = S.termSettings || { term: '', term_start: '', term_end: '', next_term_start: '' };
+  const c = d('content');
+  const h = e('h2', { class: 'page-h' }); h.textContent = 'Settings'; c.appendChild(h);
+
+  const card = d('card', 'max-width:600px');
+  const sh = e('h3', { class: 'section-h' }); sh.textContent = 'Academic Term'; card.appendChild(sh);
+
+  const terms = [{ val: 'Term 1', lbl: 'Term 1' }, { val: 'Term 2', lbl: 'Term 2' }, { val: 'Term 3', lbl: 'Term 3' }];
+  const termGroup = d('form-group');
+  const termLabel = e('label'); termLabel.textContent = 'Active Term';
+  const termSel = e('select');
+  terms.forEach(t => {
+    const o = e('option', { value: t.val }); o.textContent = t.lbl;
+    if (s.term === t.val) o.selected = true;
+    termSel.appendChild(o);
+  });
+  termGroup.appendChild(termLabel); termGroup.appendChild(termSel); card.appendChild(termGroup);
+
+  const startGroup = d('form-group');
+  const startLabel = e('label'); startLabel.textContent = 'Term Start Date';
+  const startIn = e('input', { type: 'date' }); startIn.value = s.term_start || '';
+  startGroup.appendChild(startLabel); startGroup.appendChild(startIn); card.appendChild(startGroup);
+
+  const endGroup = d('form-group');
+  const endLabel = e('label'); endLabel.textContent = 'Term End Date';
+  const endIn = e('input', { type: 'date' }); endIn.value = s.term_end || '';
+  endGroup.appendChild(endLabel); endGroup.appendChild(endIn); card.appendChild(endGroup);
+
+  const nextGroup = d('form-group');
+  const nextLabel = e('label'); nextLabel.textContent = 'Next Term Starts On';
+  const nextIn = e('input', { type: 'date' }); nextIn.value = s.next_term_start || '';
+  nextGroup.appendChild(nextLabel); nextGroup.appendChild(nextIn); card.appendChild(nextGroup);
+
+  const msgEl = d('', 'margin-top:14px');
+  const saveBtn = e('button', { class: 'btn btn-primary' });
+  saveBtn.textContent = 'Save Settings';
+  saveBtn.addEventListener('click', async () => {
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spin"></span> Saving...';
+    msgEl.textContent = '';
+    const err = await saveTermSettings(termSel.value, startIn.value, endIn.value, nextIn.value);
+    if (err) { msgEl.textContent = 'Error: ' + err; msgEl.className = 'msg-err'; }
+    else {
+      msgEl.textContent = 'Settings saved successfully!';
+      msgEl.className = 'msg-ok';
+      S.termSettings = { ...s, term: termSel.value, term_start: startIn.value, term_end: endIn.value, next_term_start: nextIn.value };
+    }
+    saveBtn.disabled = false;
+    saveBtn.textContent = 'Save Settings';
+  });
+  card.appendChild(saveBtn);
+  card.appendChild(msgEl);
+  c.appendChild(card);
+  return c;
+}
+
+// ══════════════════════════════════════════════════
 //  VIEW: ADMIN REPORTS (uses DB views)
 // ══════════════════════════════════════════════════
 function ViewReports() {
@@ -1856,15 +2205,15 @@ function ViewReports() {
 
   // ── GENERATE ALL banner
   const genBanner=d('card','margin-bottom:20px;background:linear-gradient(135deg,#1e3a5f 0%,#0f1f35 100%);color:#fff;border:none');
-  const genTop=d('','display:flex;align-items:center;gap:16px;flex-wrap:wrap');
+  const genTop=d('gen-banner-top');
   const genIcon=e('div',{style:'font-size:28px;flex-shrink:0'}); genIcon.textContent='📋'; genTop.appendChild(genIcon);
-  const genText=d('','flex:1');
+  const genText=d('','flex:1;min-width:180px');
   const genTitle=e('div',{style:'font-size:16px;font-weight:700;margin-bottom:3px'}); genTitle.textContent='Generate All Report Cards'; genText.appendChild(genTitle);
   const genSub=e('div',{style:'font-size:12px;opacity:.85'}); genSub.textContent='Opens a single printable window with every pupil — one page per report. Use browser Print to export as PDF.'; genText.appendChild(genSub);
   genTop.appendChild(genText);
 
   // Class filter select
-  const genSel=e('select',{id:'gen-sel',style:'width:auto;border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.15);color:#fff;flex-shrink:0'});
+  const genSel=e('select',{id:'gen-sel',class:'gen-sel',style:'width:auto;border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.15);color:#fff;flex-shrink:0'});
   const optAll=e('option',{value:''}); optAll.textContent='All classes ('+S.pupils.length+' pupils)'; genSel.appendChild(optAll);
   S.classes.forEach(cls=>{
     const cnt=S.pupils.filter(p=>p.class_id===cls.id).length;
@@ -1872,7 +2221,7 @@ function ViewReports() {
   });
   genTop.appendChild(genSel);
 
-  const genBtn=e('button',{style:'background:#fff;color:var(--primary);border:none;padding:10px 22px;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap;font-family:Outfit,sans-serif'});
+  const genBtn=e('button',{class:'gen-all-btn',style:'background:#fff;color:var(--primary);border:none;padding:10px 22px;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap;font-family:Outfit,sans-serif'});
   genBtn.textContent='Generate All';
   genBtn.addEventListener('click',()=>{
     const filterVal=genSel.value||null;
@@ -1890,7 +2239,7 @@ function ViewReports() {
 
   const sectionLabel=e('div',{style:'font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px'}); sectionLabel.textContent='Preview individual report'; c.appendChild(sectionLabel);
 
-  const layout=d('','display:grid;grid-template-columns:240px 1fr;gap:20px;align-items:start');
+  const layout=d('report-layout');
 
   // sidebar pupil list
   const aside=d('','background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:14px;max-height:70vh;overflow-y:auto');
@@ -1927,7 +2276,7 @@ function ViewReports() {
     rc.appendChild(topBtns);
     const previewWrap=d('report-preview-wrap');
     const previewSheet=d('report-preview-sheet');
-    previewSheet.innerHTML=`<style>${REPORT_DOC_CSS}</style>${buildReportCardHtml(S.reportSummary,S.reportSubjects)}`;
+    previewSheet.innerHTML=`<style>${REPORT_CSS}</style>${buildReportHtml(S.reportSummary,S.reportSubjects)}`;
     previewWrap.appendChild(previewSheet);
     rc.appendChild(previewWrap);
     main.appendChild(rc);
@@ -2083,7 +2432,7 @@ function ViewPupils() {
   addBtn.addEventListener('click', () => openPupilModal(null));
   ab.appendChild(addBtn);
 
-  const searchIn = e('input', {type: 'text', placeholder: 'Search pupils…', style: 'width:180px'});
+  const searchIn = e('input', {type: 'text', placeholder: 'Search pupils…', class: 'search-input', style: 'width:180px'});
   if (S.pupilSearch) searchIn.value = S.pupilSearch;
   searchIn.addEventListener('input', () => { S.pupilSearch = searchIn.value.trim(); render(); });
   searchIn.addEventListener('keydown', ev => { if (ev.key === 'Enter') render(); });
@@ -2313,7 +2662,7 @@ function ViewTeachers() {
   addBtn.addEventListener('click', () => openTeacherModal(null));
   ab.appendChild(addBtn);
 
-  const searchIn = e('input', {type: 'text', placeholder: 'Search teachers…', style: 'width:180px'});
+  const searchIn = e('input', {type: 'text', placeholder: 'Search teachers…', class: 'search-input', style: 'width:180px'});
   if (S.teacherSearch) searchIn.value = S.teacherSearch;
   searchIn.addEventListener('input', () => { S.teacherSearch = searchIn.value.trim(); render(); });
   searchIn.addEventListener('keydown', ev => { if (ev.key === 'Enter') render(); });
@@ -2543,7 +2892,7 @@ async function deleteTeacher(teacher) {
     const card=d('login-card');
 
     const lw=d('login-logo');
-    lw.innerHTML=`<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="2" y="10" width="20" height="12" rx="2" stroke="#fff" stroke-width="1.5"/><path d="M12 2L2 10h20L12 2z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><rect x="9" y="14" width="6" height="8" fill="rgba(255,255,255,.4)"/></svg>`;
+    lw.innerHTML=`<img src="badge.png" alt="Hill View School Badge">`;
     card.appendChild(lw);
     const h1=e('h1',{class:'login-h1'}); h1.textContent='Set Your Password'; card.appendChild(h1);
     const sub=e('p',{class:'login-sub'}); sub.textContent='Create a password to access the system'; card.appendChild(sub);
@@ -2585,7 +2934,7 @@ async function deleteTeacher(teacher) {
   const card=d('login-card');
 
   const lw=d('login-logo');
-  lw.innerHTML=`<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="2" y="10" width="20" height="12" rx="2" stroke="#fff" stroke-width="1.5"/><path d="M12 2L2 10h20L12 2z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><rect x="9" y="14" width="6" height="8" fill="rgba(255,255,255,.4)"/></svg>`;
+  lw.innerHTML=`<img src="badge.png" alt="Hill View School Badge">`;
   card.appendChild(lw);
   const h1=e('h1',{class:'login-h1'}); h1.textContent='Hill View Primary School'; card.appendChild(h1);
   const sub=e('p',{class:'login-sub'}); sub.textContent='Report Management System'; card.appendChild(sub);
@@ -2617,8 +2966,10 @@ async function deleteTeacher(teacher) {
 // ══════════════════════════════════════════════════
 function renderNavbar() {
   const nav=e('nav',{class:'navbar'});
-  nav.innerHTML=`<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="10" width="20" height="12" rx="2" stroke="#fff" stroke-width="1.5"/><path d="M12 2L2 10h20L12 2z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><rect x="9" y="14" width="6" height="8" fill="rgba(255,255,255,.4)"/></svg>`;
-  const t=e('span',{class:'nav-brand'}); t.textContent='Hill View Primary School'; nav.appendChild(t);
+  const t=e('span',{class:'nav-brand'});
+  const bImg=e('img',{src:'badge.png',alt:'Hill View',style:'width:28px;height:28px;border-radius:4px;object-fit:contain;flex-shrink:0'});
+  const bText=e('span',{class:'nav-brand-text'}); bText.textContent='Hill View Primary School';
+  t.appendChild(bImg); t.appendChild(bText); nav.appendChild(t);
   
   const av=e('span',{style:'display:flex;align-items:center;gap:8px;margin-left:auto;margin-right:12px'});
   if (S.user.avatar) {
@@ -2660,19 +3011,21 @@ function render() {
       {id:'reports',  label:'Reports',     icon:'<path d="M3 2h10l3 3v13H3V2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M6 9h6M6 12h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'},
       {id:'pupils',   label:'Pupil Management', icon:'<path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>'},
       {id:'teachers', label:'Teacher Management', icon:'<path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/><path d="M16 6v-2M8 6V4M8 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'},
+      {id:'settings', label:'Settings',    icon:'<path d="M12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm6.5-1h-1.7l-.4-2H10.6l-.4 2H8.5v1.8l1.5 1v1.5l-1.5 1v1.8h1.7l.4 2h2.7l.4-2h1.5l.4 2h1.7v-1.8l-1.5-1v-1.5l1.5-1V9zM12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" fill="currentColor"/>'},
     ];
     if(S.view==='overview') contentEl=ViewOverview();
     else if(S.view==='marks') contentEl=ViewMarks();
     else if(S.view==='reports') contentEl=ViewReports();
     else if(S.view==='pupils') contentEl=ViewPupils();
     else if(S.view==='teachers') contentEl=ViewTeachers();
+    else if(S.view==='settings') contentEl=ViewSettings();
     else contentEl=ViewReports();
   } else {
     navItems=[
       {id:'marks',  label:'Enter Marks',icon:'<path d="M1 4h14M1 8h14M1 12h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'},
       {id:'summary',label:'Summary',    icon:'<path d="M2 12l5-5 4 4 5-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>'},
     ];
-    contentEl=S.view==='summary'?ViewSummary():ViewMarks();
+    contentEl=S.view==='summary'?TeacherSummary():TeacherMarks();
   }
 
   const sb=e('aside',{class:'sidebar'});

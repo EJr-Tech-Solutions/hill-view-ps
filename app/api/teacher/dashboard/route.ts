@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 
@@ -16,7 +16,7 @@ const resolveSubjectLevel = (className: string) => {
   return "p4-p7";
 };
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const supabase = createRouteHandlerClient({ cookies });
   const {
     data: { user }
@@ -43,52 +43,102 @@ export async function GET() {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const { data: classInfo } = await supabase
-    .from("classes")
-    .select("id, name")
-    .eq("id", appUser.class_id)
-    .single();
+  // Fetch all classes assigned to this teacher
+  const { data: teacherClasses } = await supabase
+    .from("teacher_classes")
+    .select("class_id, classes(id, name)")
+    .eq("teacher_id", appUser.id);
 
-  const subjectLevel = classInfo ? resolveSubjectLevel(classInfo.name) : "p4-p7";
+  const assignedClasses: { id: string; name: string }[] = (teacherClasses ?? [])
+    .map((tc) => tc.classes as { id: string; name: string })
+    .filter(Boolean);
 
-  const { data: pupils } = await supabase
-    .from("pupils")
-    .select("id, name, avatar, house, paycode")
-    .eq("class_id", appUser.class_id)
-    .order("name");
+  // Fallback to users.class_id if no teacher_classes entries
+  if (assignedClasses.length === 0 && appUser.class_id) {
+    const { data: fallbackClass } = await supabase
+      .from("classes")
+      .select("id, name")
+      .eq("id", appUser.class_id)
+      .single();
+    if (fallbackClass) assignedClasses.push(fallbackClass);
+  }
 
-  const { data: subjects } = await supabase
-    .from("subjects")
-    .select("id, name")
-    .eq("level", subjectLevel)
-    .order("name");
+  // Determine which class to show: use URL param or first assigned class
+  const searchParams = req.nextUrl.searchParams;
+  const requestedClassId = searchParams.get("classId");
+  const activeClass =
+    assignedClasses.find((c) => c.id === requestedClassId) ?? assignedClasses[0] ?? null;
 
-  const pupilIds = (pupils ?? []).map((pupil) => pupil.id);
+  let pupils: Array<{
+    id: string;
+    name: string;
+    avatar?: string | null;
+    house?: string | null;
+    paycode?: string | null;
+  }> = [];
+  let subjects: Array<{ id: string; name: string }> = [];
+  let marks: Array<{
+    id: string;
+    pupil_id: string;
+    subject_id: string;
+    score: number;
+    teacher_comment?: string | null;
+  }> = [];
+  let performance: {
+    class_name: string;
+    average_score: number;
+    best_pupil: string | null;
+    weakest_pupil: string | null;
+  } | null = null;
 
-  const { data: marks } = pupilIds.length
-    ? await supabase
+  if (activeClass) {
+    const subjectLevel = resolveSubjectLevel(activeClass.name);
+
+    const { data: pupilsData } = await supabase
+      .from("pupils")
+      .select("id, name, avatar, house, paycode")
+      .eq("class_id", activeClass.id)
+      .order("name");
+
+    pupils = pupilsData ?? [];
+
+    const { data: subjectsData } = await supabase
+      .from("subjects")
+      .select("id, name")
+      .eq("level", subjectLevel)
+      .order("name");
+
+    subjects = subjectsData ?? [];
+
+    const pupilIds = pupils.map((p) => p.id);
+    if (pupilIds.length) {
+      const { data: marksData } = await supabase
         .from("marks")
         .select("id, pupil_id, subject_id, score, teacher_comment")
-        .in("pupil_id", pupilIds)
-    : { data: [] as Array<{ id: string; pupil_id: string; subject_id: string; score: number; teacher_comment?: string | null }> };
+        .in("pupil_id", pupilIds);
+      marks = marksData ?? [];
+    }
 
-  const { data: performance } = await supabase
-    .from("class_performance")
-    .select("class_name, average_score, best_pupil, weakest_pupil")
-    .eq("class_id", appUser.class_id)
-    .single();
+    const { data: perfData } = await supabase
+      .from("class_performance")
+      .select("class_name, average_score, best_pupil, weakest_pupil")
+      .eq("class_id", activeClass.id)
+      .single();
+    performance = perfData ?? null;
+  }
 
   return NextResponse.json({
     user: {
       id: appUser.id,
       email: appUser.email,
       name: appUser.name,
-      classId: appUser.class_id
+      classId: activeClass?.id ?? appUser.class_id
     },
-    classInfo,
-    pupils: pupils ?? [],
-    subjects: subjects ?? [],
-    marks: marks ?? [],
-    performance: performance ?? null
+    classInfo: activeClass,
+    assignedClasses,
+    pupils,
+    subjects,
+    marks,
+    performance
   });
 }

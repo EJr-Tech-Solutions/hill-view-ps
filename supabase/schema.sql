@@ -64,6 +64,14 @@ create table if not exists nursery_color_config (
   unique (teacher_id, level)
 );
 
+create table if not exists term_settings (
+  id uuid primary key default gen_random_uuid(),
+  term text not null check (term in ('Term 1', 'Term 2', 'Term 3')),
+  term_start date not null,
+  term_end date not null,
+  next_term_start date
+);
+
 -- Helper functions for RLS
 create or replace function app_user_role()
 returns text
@@ -117,7 +125,14 @@ create policy classes_admin_all on classes
   with check (app_user_role() = 'admin');
 
 create policy classes_teacher_select on classes
-  for select using (id = app_user_class());
+  for select using (
+    app_user_role() = 'teacher'
+    and exists (
+      select 1 from teacher_classes tc
+      where tc.teacher_id = auth.uid()
+        and tc.class_id = id
+    )
+  );
 
 -- Users policies
 create policy users_admin_all on users
@@ -208,6 +223,16 @@ create policy marks_teacher_all on marks
   for all using (
     app_user_role() = 'teacher'
   );
+
+-- Term Settings policies
+alter table term_settings enable row level security;
+
+create policy term_settings_admin_all on term_settings
+  for all using (app_user_role() = 'admin')
+  with check (app_user_role() = 'admin');
+
+create policy term_settings_read_all on term_settings
+  for select using (auth.uid() is not null);
 
 -- Views for analytics and reporting
 create or replace view pupil_report_subjects as

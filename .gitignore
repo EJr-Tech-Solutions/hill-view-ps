@@ -1,6 +1,5 @@
-node_modules
-.next
 .env.local
+node_modules
 .DS_Store
 *.jpg
 *.jpeg

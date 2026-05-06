@@ -24,16 +24,7 @@ jobs:
         with:
           node-version: 20
 
-      - run: npm ci
-
-      - name: Build docs with env vars
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
-          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-        run: npm run build:docs
+      - run: npm run build:docs
 
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -5,8 +5,5 @@
   "type": "module",
   "scripts": {
     "build:docs": "node scripts/build-docs.mjs"
-  },
-  "devDependencies": {
-    "dotenv": "^16.6.1"
   }
 }

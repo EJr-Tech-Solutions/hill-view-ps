@@ -10,3 +10,9 @@ allow edit of house and paycode for pupil
 - Pupil modal now includes House and School Pay Code input fields
 - Both fields saved to DB on add and edit
 - Values displayed on report cards in info row
+
+
+icons baby class report
+keys
+reset password redirection url
+

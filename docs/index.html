@@ -60,13 +60,17 @@ body{
   font-size:14px;
   min-height:100vh;
   line-height:1.5;
+  overflow-x:hidden;
 }
+img{max-width:100%;height:auto}
 h1,h2,h3,.page-h,.section-h,.modal-h,.login-h1,.teach-name{
   font-family:'Outfit',system-ui,sans-serif;
+  word-break:break-word;
 }
 
 /* ── LAYOUT ── */
 #app{display:flex;flex-direction:column;min-height:100vh}
+.main{display:flex;flex:1;min-height:0;min-width:0}
 
 /* ── NAVBAR ── */
 .navbar{
@@ -74,8 +78,8 @@ h1,h2,h3,.page-h,.section-h,.modal-h,.login-h1,.teach-name{
   color:#fff;
   display:flex;
   align-items:center;
-  gap:16px;
-  padding:0 24px;
+  gap:1rem;
+  padding:0 clamp(.75rem, 3vw, 1.5rem);
   height:58px;
   flex-shrink:0;
   box-shadow:0 2px 12px rgba(15,31,53,.45);
@@ -92,12 +96,13 @@ h1,h2,h3,.page-h,.section-h,.modal-h,.login-h1,.teach-name{
 .nav-brand{
   font-family:'Outfit',sans-serif;
   font-weight:700;
-  font-size:15.5px;
+  font-size:clamp(.875rem, 2.5vw, .96875rem);
   flex:1;
   letter-spacing:.01em;
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:.625rem;
+  min-width:0;
 }
 .nav-brand .brand-dot{
   width:8px;height:8px;border-radius:50%;
@@ -110,24 +115,26 @@ h1,h2,h3,.page-h,.section-h,.modal-h,.login-h1,.teach-name{
   background:rgba(184,147,42,.25);
   border:1px solid rgba(184,147,42,.4);
   color:#f5d98a;
-  padding:3px 10px;
+  padding:clamp(.1875rem, .5vw, .25rem) clamp(.5rem, 1.5vw, .625rem);
   border-radius:20px;
   text-transform:uppercase;
   letter-spacing:.08em;
   font-weight:700;
   font-family:'Outfit',sans-serif;
+  white-space:nowrap;
 }
 .btn-signout{
   background:rgba(255,255,255,.1);
   border:1px solid rgba(255,255,255,.2);
   color:rgba(255,255,255,.9);
-  padding:5px 14px;
+  padding:clamp(.25rem, 1vw, .3125rem) clamp(.625rem, 2vw, .875rem);
   border-radius:var(--r);
   cursor:pointer;
   font-size:12px;
   font-weight:500;
   transition:all .2s;
   letter-spacing:.02em;
+  white-space:nowrap;
 }
 .btn-signout:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.35)}
 
@@ -137,7 +144,7 @@ h1,h2,h3,.page-h,.section-h,.modal-h,.login-h1,.teach-name{
   width:210px;
   background:var(--surface);
   border-right:1px solid var(--border);
-  padding:16px 8px;
+  padding:1rem .5rem;
   flex-shrink:0;
   display:flex;
   flex-direction:column;
@@ -151,15 +158,15 @@ h1,h2,h3,.page-h,.section-h,.modal-h,.login-h1,.teach-name{
   color:var(--muted-lt);
   text-transform:uppercase;
   letter-spacing:.1em;
-  padding:10px 14px 6px;
+  padding:clamp(.5rem, 2vw, .625rem) clamp(.625rem, 2vw, .875rem) clamp(.3125rem, 1vw, .375rem);
   margin-top:4px;
 }
 .nav-item{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:.625rem;
   width:100%;
-  padding:9px 14px;
+  padding:clamp(.4375rem, 1.5vw, .5625rem) clamp(.625rem, 2vw, .875rem);
   border:none;
   border-radius:var(--r);
   background:transparent;
@@ -173,13 +180,14 @@ h1,h2,h3,.page-h,.section-h,.modal-h,.login-h1,.teach-name{
   font-family:'Source Sans 3',sans-serif;
 }
 .nav-item .nav-icon{
-  width:20px;height:20px;
+  width:1.25rem;height:1.25rem;
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;
   border-radius:5px;
   background:transparent;
   transition:background .15s;
 }
+.nav-item .nav-icon svg{width:100%;height:100%}
 .nav-item:hover{background:var(--primary-lt);color:var(--primary)}
 .nav-item:hover .nav-icon{background:rgba(30,58,95,.1)}
 .nav-item.active{
@@ -198,7 +206,7 @@ h1,h2,h3,.page-h,.section-h,.modal-h,.login-h1,.teach-name{
 }
 
 /* ── CONTENT ── */
-.content{flex:1;overflow-y:auto;padding:28px 32px}
+.content{flex:1;overflow:auto;padding:clamp(1rem, 3vw, 1.75rem) clamp(1rem, 3vw, 2rem);min-width:0}
 
 /* ── INPUTS ── */
 input,select,textarea{
@@ -267,17 +275,17 @@ input.inline-num{width:62px;text-align:center;padding:4px 5px;font-size:13px}
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:var(--rl);
-  padding:22px;
+  padding:clamp(.875rem, 2vw, 1.375rem);
   box-shadow:var(--shadow-sm);
 }
 
 /* ── METRIC CARDS ── */
-.mc-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:24px}
+.mc-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(.625rem, 2vw, .875rem);margin-bottom:24px}
 .mc{
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:var(--rl);
-  padding:20px;
+  padding:clamp(1rem, 2.5vw, 1.25rem);
   display:flex;
   flex-direction:column;
   gap:4px;
@@ -294,7 +302,7 @@ input.inline-num{width:62px;text-align:center;padding:4px 5px;font-size:13px}
 }
 .mc-val{
   font-family:'Outfit',sans-serif;
-  font-size:28px;
+  font-size:clamp(1.375rem, 4vw, 1.75rem);
   font-weight:800;
   color:var(--primary);
   line-height:1;
@@ -302,10 +310,10 @@ input.inline-num{width:62px;text-align:center;padding:4px 5px;font-size:13px}
 .mc-lbl{font-size:12px;color:var(--muted);margin-top:4px;font-weight:500;letter-spacing:.02em}
 
 /* ── TABLES ── */
-.tbl-wrap{overflow-x:auto;border-radius:var(--r)}
+.tbl-wrap{overflow-x:auto;border-radius:var(--r);max-width:100%}
 table{width:100%;border-collapse:collapse;font-size:13px}
 thead th{
-  padding:10px 12px;
+  padding:clamp(.5rem, 2vw, .625rem) clamp(.625rem, 2vw, .75rem);
   background:var(--primary-xl);
   font-family:'Outfit',sans-serif;
   font-weight:700;
@@ -318,7 +326,7 @@ thead th{
   letter-spacing:.05em;
 }
 tbody td{
-  padding:9px 12px;
+  padding:clamp(.4375rem, 1.5vw, .5625rem) clamp(.625rem, 2vw, .75rem);
   border-bottom:1px solid var(--border);
   vertical-align:middle;
 }
@@ -361,16 +369,16 @@ thead .sticky-col{background:var(--primary-xl)}
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:var(--rx);
-  padding:40px 36px;
-  width:400px;
+  padding:clamp(1.5rem, 5vw, 2.5rem) clamp(1.25rem, 4vw, 2.25rem);
+  width:min(400px,95vw);
   max-width:95vw;
   position:relative;
   z-index:1;
   box-shadow:var(--shadow-lg);
 }
 .login-logo{
-  width:60px;height:60px;
-  border-radius:16px;
+  width:3.75rem;height:3.75rem;
+  border-radius:1rem;
   display:flex;align-items:center;justify-content:center;
   margin:0 auto 20px;
   box-shadow:0 4px 14px rgba(30,58,95,.4);
@@ -380,7 +388,7 @@ thead .sticky-col{background:var(--primary-xl)}
 }
 .login-logo img{width:100%;height:100%;object-fit:contain;border-radius:12px}
 .login-h1{
-  font-size:22px;
+  font-size:clamp(1.25rem, 4vw, 1.375rem);
   font-weight:800;
   text-align:center;
   margin-bottom:4px;
@@ -407,7 +415,7 @@ thead .sticky-col{background:var(--primary-xl)}
 .err-box{
   font-size:12.5px;
   color:var(--danger);
-  padding:10px 14px;
+  padding:clamp(.5rem, 2vw, .625rem) clamp(.75rem, 2.5vw, .875rem);
   background:var(--danger-lt);
   border:1px solid #fca5a5;
   border-radius:var(--r);
@@ -418,14 +426,14 @@ thead .sticky-col{background:var(--primary-xl)}
 
 /* ── MISC ── */
 .page-h{
-  font-size:22px;
+  font-size:clamp(1.125rem, 3.5vw, 1.375rem);
   font-weight:800;
   color:var(--primary);
   margin-bottom:22px;
   letter-spacing:-.01em;
 }
 .section-h{
-  font-size:13px;
+  font-size:clamp(.75rem, 2vw, .8125rem);
   font-weight:700;
   color:var(--muted);
   margin-bottom:14px;
@@ -446,10 +454,10 @@ thead .sticky-col{background:var(--primary-xl)}
 .pill-accent{background:var(--accent-lt);color:var(--accent)}
 .hdr-row{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
 .save-toast{
-  position:fixed;bottom:28px;right:28px;
+  position:fixed;bottom:1.75rem;right:1.75rem;
   background:var(--primary);
   color:#fff;
-  padding:12px 22px;
+  padding:.75rem 1.375rem;
   border-radius:var(--r);
   font-size:13px;
   font-weight:700;
@@ -457,9 +465,13 @@ thead .sticky-col{background:var(--primary-xl)}
   transition:opacity .3s,transform .3s;
   pointer-events:none;
   z-index:9999;
-  transform:translateY(8px);
+  transform:translateY(.5rem);
   box-shadow:var(--shadow-md);
   font-family:'Outfit',sans-serif;
+  max-width:calc(100vw - 2rem);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 .save-toast.show{opacity:1;transform:translateY(0)}
 .save-toast.err{background:var(--danger)}
@@ -480,12 +492,12 @@ thead .sticky-col{background:var(--primary-xl)}
   flex:1;
   gap:12px;
   color:var(--muted);
-  padding:60px;
+  padding:clamp(2rem, 8vw, 3.75rem);
   font-size:14px;
 }
 .two-col{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:18px}
 .empty{
-  padding:40px;
+  padding:clamp(1.5rem, 5vw, 2.5rem);
   text-align:center;
   color:var(--muted-lt);
   font-size:13.5px;
@@ -494,11 +506,11 @@ thead .sticky-col{background:var(--primary-xl)}
   align-items:center;
   gap:8px;
 }
-.empty-icon{font-size:32px;opacity:.5}
+.empty-icon{font-size:2rem;opacity:.5}
 .msg-ok{font-size:12.5px;color:var(--success);background:var(--success-lt);padding:7px 12px;border-radius:var(--r);font-weight:500}
 .msg-err{font-size:12.5px;color:var(--danger);background:var(--danger-lt);padding:7px 12px;border-radius:var(--r);font-weight:500}
 .inline-form{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.inline-form input{flex:1;min-width:180px}
+.inline-form input{flex:1;min-width:11.25rem}
 .marks-actions{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
 .changed-dot{width:7px;height:7px;border-radius:50%;background:var(--warn);display:inline-block;margin-left:4px;vertical-align:middle}
 
@@ -508,7 +520,7 @@ thead .sticky-col{background:var(--primary-xl)}
   text-align:center;
   border:1.5px solid var(--border);
   border-radius:var(--r);
-  padding:12px 8px;
+  padding:clamp(.5rem, 2vw, .75rem) clamp(.375rem, 1.5vw, .5rem);
   cursor:pointer;
   transition:all .15s;
   background:var(--surface);
@@ -516,22 +528,22 @@ thead .sticky-col{background:var(--primary-xl)}
 .avatar-card:hover{border-color:var(--primary);box-shadow:0 2px 8px rgba(30,58,95,.12)}
 .avatar-card.selected{border-color:var(--primary);border-width:2px;background:var(--primary-lt)}
 .avatar-img{
-  width:64px;height:64px;border-radius:50%;
+  width:4rem;height:4rem;border-radius:50%;
   object-fit:cover;
   background:var(--primary-lt);
   display:flex;align-items:center;justify-content:center;
-  font-size:22px;font-weight:800;
+  font-size:1.4rem;font-weight:800;
   color:var(--primary);
   margin:0 auto 8px;
   overflow:hidden;
   font-family:'Outfit',sans-serif;
 }
 .avatar-img img{width:100%;height:100%;object-fit:cover}
-.avatar-name{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px;margin:0 auto}
+.avatar-name{font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 8px);margin:0 auto}
 .upload-zone{
   border:2px dashed var(--border-dk);
   border-radius:var(--r);
-  padding:24px;
+  padding:clamp(1rem, 3vw, 1.5rem);
   text-align:center;
   cursor:pointer;
   transition:all .15s;
@@ -560,21 +572,21 @@ thead .sticky-col{background:var(--primary-xl)}
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:var(--rl);
-  padding:18px 20px;
+  padding:clamp(1rem, 2.5vw, 1.125rem) clamp(1rem, 2.5vw, 1.25rem);
   margin-bottom:10px;
   display:flex;
   align-items:center;
-  gap:16px;
+  gap:1rem;
   box-shadow:var(--shadow-sm);
   transition:box-shadow .15s,border-color .15s;
 }
 .teach-card:hover{border-color:var(--border-dk);box-shadow:var(--shadow)}
 .teach-avatar{
-  width:56px;height:56px;border-radius:50%;
+  width:3.5rem;height:3.5rem;border-radius:50%;
   object-fit:cover;
   background:var(--primary-lt);
   display:flex;align-items:center;justify-content:center;
-  font-size:18px;font-weight:800;
+  font-size:1.15rem;font-weight:800;
   color:var(--primary);
   flex-shrink:0;overflow:hidden;
   font-family:'Outfit',sans-serif;
@@ -582,8 +594,8 @@ thead .sticky-col{background:var(--primary-xl)}
 }
 .teach-avatar img{width:100%;height:100%;object-fit:cover}
 .teach-info{flex:1}
-.teach-name{font-size:15px;font-weight:700;color:var(--text)}
-.teach-meta{font-size:12px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.teach-name{font-size:clamp(.875rem, 2.5vw, .9375rem);font-weight:700;color:var(--text)}
+.teach-meta{font-size:12px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
 .teach-class{font-size:12px;color:var(--primary);font-weight:700;margin-top:4px}
 .teach-actions{display:flex;gap:8px;flex-shrink:0}
 
@@ -594,12 +606,14 @@ thead .sticky-col{background:var(--primary-xl)}
   display:flex;align-items:center;justify-content:center;
   z-index:1000;
   backdrop-filter:blur(2px);
+  overflow-y:auto;
+  padding:16px;
 }
 .modal-box{
   background:var(--surface);
   border-radius:var(--rx);
-  padding:28px;
-  width:460px;
+  padding:clamp(1rem, 3vw, 1.75rem);
+  width:min(460px, 95vw);
   max-width:95vw;
   max-height:90vh;
   overflow-y:auto;
@@ -607,7 +621,7 @@ thead .sticky-col{background:var(--primary-xl)}
   border:1px solid var(--border);
 }
 .modal-h{
-  font-size:18px;
+  font-size:clamp(1rem, 3vw, 1.125rem);
   font-weight:800;
   margin-bottom:20px;
   color:var(--primary);
@@ -630,11 +644,11 @@ thead .sticky-col{background:var(--primary-xl)}
 
 /* ── REPORT CARD ── */
 .report-card{background:transparent;border:none;padding:0;max-width:none}
-.report-preview-wrap{background:#d8deea;border:1px solid var(--border);border-radius:var(--rl);padding:16px;overflow:auto}
-.report-preview-sheet{width:210mm;min-height:297mm;margin:0 auto;background:#fff;box-shadow:0 10px 28px rgba(0,0,0,.12)}
+.report-preview-wrap{background:#d8deea;border:1px solid var(--border);border-radius:var(--rl);padding:clamp(.625rem, 2vw, 1rem);overflow:auto;max-width:100%}
+.report-preview-sheet{width:min(210mm, 100%);min-height:297mm;margin:0 auto;background:#fff;box-shadow:0 10px 28px rgba(0,0,0,.12)}
 
 /* ── EXCEL TABLE ── */
-.excel-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r)}
+.excel-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r);max-width:100%}
 .excel-tbl{width:100%;border-collapse:collapse;font-size:13px;table-layout:auto}
 .excel-tbl thead th{
   padding:8px 10px;
@@ -649,7 +663,7 @@ thead .sticky-col{background:var(--primary-xl)}
   font-family:'Outfit',sans-serif;
   letter-spacing:.03em;
 }
-.excel-tbl thead th.name-col{text-align:left;position:sticky;left:0;z-index:3;background:var(--primary-lt);min-width:160px;border-right:2px solid var(--primary)}
+.excel-tbl thead th.name-col{text-align:left;position:sticky;left:0;z-index:3;background:var(--primary-lt);min-width:10rem;border-right:2px solid var(--primary)}
 .excel-tbl tbody td{padding:0;border-right:1px solid var(--border);border-bottom:1px solid var(--border);vertical-align:middle}
 .excel-tbl tbody td.name-col{padding:7px 12px;font-weight:600;position:sticky;left:0;background:var(--surface-2);z-index:1;border-right:2px solid var(--border-dk);white-space:nowrap}
 .excel-tbl tbody tr:hover td{background:var(--primary-xl)}.excel-tbl tbody tr:hover td.name-col{background:var(--primary-lt)}
@@ -670,13 +684,13 @@ thead .sticky-col{background:var(--primary-xl)}
 
 /* ── ADD PUPIL PANEL ── */
 .add-pupil-panel{
-  display:flex;align-items:center;gap:10px;
-  padding:12px 16px;
+  display:flex;align-items:center;gap:.625rem;
+  padding:clamp(.625rem, 2vw, .75rem) clamp(.75rem, 2.5vw, 1rem);
   background:var(--primary-xl);
   border-top:2px dashed var(--border-dk);
   border-radius:0 0 var(--r) var(--r);
 }
-.add-pupil-panel input{max-width:240px;padding:7px 11px;font-size:13px}
+.add-pupil-panel input{max-width:15rem;padding:7px 11px;font-size:13px}
 
 /* ── GENERATE ALL ── */
 .gen-all-btn{
@@ -704,80 +718,119 @@ thead .sticky-col{background:var(--primary-xl)}
   border-bottom:1px solid var(--border);
 }
 .page-header-icon{
-  width:40px;height:40px;
+  width:2.5rem;height:2.5rem;
   border-radius:10px;
   background:var(--primary-lt);
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;
   color:var(--primary);
+  font-size:1.25rem;
 }
+.nav-user-area{display:flex;align-items:center;gap:8px;margin-left:auto;margin-right:12px}
 .nav-brand-text{white-space:nowrap}
-.search-input{width:180px;transition:width .15s}
-@media(max-width:490px){.search-input{width:100%}}
+.nav-brand img,.nav-user-area img{width:1.75rem;height:1.75rem}
+.search-input{width:11.25rem;transition:width .15s}
+@media(max-width:490px){
+  .search-input{width:100%}
+  .nav-brand-text{display:none}
+  .nav-user-area .nav-user{display:none}
+  .nav-user-area .badge-role{display:none}
+}
 
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
   .two-col{grid-template-columns:1fr}
   .mc-grid{grid-template-columns:repeat(2,1fr)}
   .form-grid{grid-template-columns:1fr}
-  .navbar{padding:0 16px;gap:10px}
-  .nav-brand{font-size:14px}
+  .navbar{padding:0 .75rem;gap:.625rem}
+  .nav-brand{font-size:.875rem}
   .badge-role{padding:2px 8px;font-size:9.5px}
   .btn-signout{padding:4px 10px;font-size:11px}
   .nav-user{font-size:11px}
 }
 @media(max-width:768px){
-  .teach-card{flex-wrap:wrap;gap:12px}
-  .teach-avatar{width:48px;height:48px;font-size:16px}
-  .teach-info{flex:1 1 100%;order:1}
-  .teach-name{font-size:14px}
-  .teach-actions{flex:1 1 auto;order:2;justify-content:flex-end}
+  .two-col{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .teach-card{flex-wrap:wrap;gap:.75rem}
+  .teach-avatar{width:3rem;height:3rem;font-size:1rem}
+  .teach-info{flex:1 1 100%;order:1;min-width:0}
+  .teach-name{font-size:.875rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .teach-actions{flex:1 1 auto;order:2;justify-content:flex-end;gap:.375rem}
+  .teach-actions .btn{padding:4px 10px;font-size:11px}
   .report-preview-sheet{width:100%;min-height:auto}
   .add-pupil-panel{flex-direction:column;align-items:stretch}
   .add-pupil-panel input{max-width:none}
-  .gen-all-banner{flex-direction:column}
+  .report-layout{grid-template-columns:1fr}
+  .report-layout .report-sidebar{max-height:clamp(150px, 30vh, 300px);margin-bottom:1rem}
+  .page-header-icon{width:2.25rem;height:2.25rem;font-size:1.125rem}
+  .gen-banner-top{gap:.75rem}
 }
 @media(max-width:640px){
-  .sidebar{width:50px;padding:16px 0}
-  .nav-item{justify-content:center;padding:9px 0}
+  .sidebar{width:52px;padding:.875rem 0}
+  .nav-item .nav-icon{width:1.5rem;height:1.5rem}
+  .nav-item{justify-content:center;padding:.625rem 0}
   .nav-item span{display:none}
-  .content{padding:16px}
+  .content{padding:1rem}
   .nav-item.active::before{display:none}
-  .page-h{font-size:19px;margin-bottom:16px}
-  .mc-grid{gap:10px}
-  .mc{padding:16px}
-  .mc-val{font-size:24px}
-  .hdr-row{gap:8px}
-  .marks-actions{gap:8px}
-  .action-bar{gap:8px}
-  .save-toast{bottom:16px;right:16px;left:16px;text-align:center}
-  .card{padding:16px}
-  .avatar-grid{grid-template-columns:repeat(auto-fill,minmax(75px,1fr));gap:8px}
-  .avatar-img{width:52px;height:52px;font-size:18px}
-  .login-card{padding:28px 24px}
-  .login-h1{font-size:20px}
-  .modal-box{padding:22px;width:95vw}
-  .excel-tbl thead th.name-col{min-width:120px}
+  .page-h{font-size:1.125rem;margin-bottom:1rem}
+  .mc-grid{gap:.625rem}
+  .mc{padding:1rem}
+  .mc-val{font-size:1.5rem}
+  .hdr-row{gap:.5rem;flex-wrap:wrap}
+  .hdr-row .page-h{width:100%;margin-bottom:.25rem}
+  .marks-actions{gap:.5rem;flex-wrap:wrap}
+  .action-bar{gap:.5rem;flex-wrap:wrap}
+  .save-toast{bottom:1rem;right:1rem;left:1rem;text-align:center;white-space:normal}
+  .card{padding:1rem}
+  .avatar-grid{grid-template-columns:repeat(auto-fill,minmax(75px,1fr));gap:.5rem}
+  .avatar-img{width:3.25rem;height:3.25rem;font-size:1.15rem}
+  .login-card{padding:1.75rem 1.5rem}
+  .login-h1{font-size:1.25rem}
+  .login-logo{width:3.25rem;height:3.25rem}
+  .modal-box{padding:1.375rem;width:95vw;max-width:95vw}
+  .excel-tbl thead th.name-col{min-width:7.5rem}
   .excel-tbl{font-size:12px}
-  .xcel-inp{width:48px;padding:4px 2px;font-size:12px}
+  .xcel-inp{width:3rem;padding:4px 2px;font-size:12px}
+  .chart-wrap{height:clamp(150px, 20vh, 180px)}
+  .tbl-wrap{overflow-x:auto;overflow-y:hidden}
+  .teach-avatar{width:2.75rem;height:2.75rem;font-size:.95rem}
+  .teach-name{font-size:.8125rem}
+  .pill{font-size:10.5px;padding:2px 10px}
+  .btn{padding:7px 14px;font-size:12.5px}
+  .btn-sm{padding:4px 10px;font-size:11px}
+  .page-header-icon{width:2rem;height:2rem;font-size:1rem}
+  .report-preview-wrap{padding:.625rem}
+  .report-preview-sheet{box-shadow:none}
+  .empty-icon{font-size:1.75rem}
 }
 @media(max-width:490px){
   .mc-grid{grid-template-columns:1fr 1fr}
   .inline-form{flex-direction:column}
   .inline-form input,.inline-form select{flex:1;min-width:100%}
   .excel-wrap{font-size:11px}
-  .xcel-inp{width:40px;padding:3px 2px;font-size:11px}
-  .nav-brand .brand-text{display:none}
-  .nav-user{display:none}
-  .badge-role{display:none}
-  .mc-val{font-size:22px}
+  .xcel-inp{width:2.5rem;padding:3px 2px;font-size:11px}
+  .mc-val{font-size:1.35rem}
   .mc-lbl{font-size:11px}
-  .teach-card{padding:14px 16px}
-  .gen-banner-top{flex-direction:column;gap:10px}
+  .teach-card{padding:.875rem 1rem}
+  .gen-banner-top{flex-direction:column;gap:.625rem}
   .gen-banner-actions{flex-direction:column;align-items:stretch}
+  .avatar-grid{grid-template-columns:repeat(auto-fill,minmax(65px,1fr))}
+  .avatar-img{width:2.75rem;height:2.75rem;font-size:1rem}
+  .login-card{padding:1.5rem 1.25rem}
+  .login-logo{width:2.75rem;height:2.75rem}
+  .sidebar{width:48px}
+  .nav-item .nav-icon{width:1.4rem;height:1.4rem}
+  .search-input{width:100%}
+  .gen-sel{width:100%;flex:none}
+  .gen-btn{width:100%;justify-content:center}
+  .action-bar .btn{width:100%;justify-content:center}
+  .marks-actions .btn{width:100%;justify-content:center}
+  .hdr-row select{width:100%;flex:none}
+  .empty-icon{font-size:1.5rem}
+  .page-h{font-size:1.125rem}
+  .section-h{font-size:11px}
 }
 </style>
-</head>
 </head>
 <body>
 <div id="app"></div>
@@ -981,7 +1034,8 @@ async function loadReportForPupil(pupilId) {
     db.from('pupil_report_subjects').select('subject_name,score,teacher_comment').eq('pupil_id',pupilId),
     db.from('pupils').select('id,avatar,house,paycode').eq('id',pupilId).single(),
   ]);
-  S.reportSummary  = sumR.data ? {...sumR.data, pupil_avatar: pupR.data?.avatar||null, house: pupR.data?.house||'', paycode: pupR.data?.paycode||''} : null;
+  const ts = S.termSettings || { term: '', term_start: '', term_end: '', next_term_start: '' };
+  S.reportSummary  = sumR.data ? {...sumR.data, pupil_avatar: pupR.data?.avatar||null, house: pupR.data?.house||'', paycode: pupR.data?.paycode||'', term: ts.term, term_start: ts.term_start, term_end: ts.term_end, next_term_start: ts.next_term_start} : null;
   S.reportSubjects = subjR.data||[];
   render();
 }
@@ -1340,7 +1394,7 @@ function buildPrimaryReport(summary, subjects) {
 
     <div class="info-row">
       <div class="info-item"><span>Learner's Name</span> <span class="info-line info-line-lg">${escapeHtml(summary.pupil_name)}</span></div>
-      <div class="info-item"><span>Term</span> <span class="info-line info-line-sm">${REPORT_TERM}</span></div>
+      <div class="info-item"><span>Term</span> <span class="info-line info-line-sm">${escapeHtml(summary.term || REPORT_TERM)}</span></div>
       <div class="info-item"><span>Year</span> <span class="info-line info-line-sm">${REPORT_YEAR}</span></div>
       <div class="info-item"><span>Class</span> <span class="info-line">${escapeHtml(summary.class_name)}</span></div>
       <div class="info-item"><span>House</span> <span class="info-line">${escapeHtml(summary.house || '')}</span></div>
@@ -1420,8 +1474,8 @@ function buildPrimaryReport(summary, subjects) {
     </div>
 
     <div class="dates-row">
-      <span>This Term Ended On: <span class="date-line">${escapeHtml(summary.term_ended || '')}</span></span>
-      <span>Next Term Starts On: <span class="date-line">${escapeHtml(summary.next_term || '')}</span></span>
+      <span>This Term Ended On: <span class="date-line">${escapeHtml(summary.term_end || summary.term_ended || '')}</span></span>
+      <span>Next Term Starts On: <span class="date-line">${escapeHtml(summary.next_term_start || summary.next_term || '')}</span></span>
     </div>
 
     <div class="note-row">
@@ -1478,7 +1532,7 @@ function buildNurseryReport(summary, subjects) {
 
     <div class="info-row">
       <div class="info-item"><span>Learner's Name:</span> <span class="info-line info-line-lg">${escapeHtml(summary.pupil_name)}</span></div>
-      <div class="info-item"><span>Term</span> <span class="info-line info-line-sm">${REPORT_TERM}</span></div>
+      <div class="info-item"><span>Term</span> <span class="info-line info-line-sm">${escapeHtml(summary.term || REPORT_TERM)}</span></div>
       <div class="info-item"><span>Year</span> <span class="info-line info-line-sm">${REPORT_YEAR}</span></div>
       <div class="info-item"><span>Class</span> <span class="info-line">${escapeHtml(summary.class_name)}</span></div>
       <div class="info-item"><span>House</span> <span class="info-line">${escapeHtml(summary.house || '')}</span></div>
@@ -1513,8 +1567,8 @@ function buildNurseryReport(summary, subjects) {
       <span><b>Development:</b> <span class="fees-line" style="width:120px">${escapeHtml(summary.development || '')}</span></span>
     </div>
     <div class="dates-row">
-      <span>This Term Ended On: <span class="date-line">${escapeHtml(summary.term_ended || '')}</span></span>
-      <span>Next Term Starts On: <span class="date-line">${escapeHtml(summary.next_term || '')}</span></span>
+      <span>This Term Ended On: <span class="date-line">${escapeHtml(summary.term_end || summary.term_ended || '')}</span></span>
+      <span>Next Term Starts On: <span class="date-line">${escapeHtml(summary.next_term_start || summary.next_term || '')}</span></span>
     </div>
   </div>`;
 }
@@ -1538,6 +1592,7 @@ function printReport(summary, subjects) {
 function generateAllReports(filterClass) {
   const pupils = filterClass ? S.pupils.filter(p => p.class_id === filterClass) : S.pupils;
   if (!pupils.length) { alert('No pupils to generate reports for.'); return; }
+  const ts = S.termSettings || { term: '', term_start: '', term_end: '', next_term_start: '' };
   const pages = pupils.map(p => {
     const cls = S.classes.find(c => c.id === p.class_id);
     const subs = classSubs(p.class_id);
@@ -1554,8 +1609,12 @@ function generateAllReports(filterClass) {
       average_score: rp.avg,
       position: rp.pos,
       uneb_grade: isP7 ? pleCalc(p.id, p.class_id).grade : null,
+      term: ts.term || '',
+      term_start: ts.term_start || '',
+      term_end: ts.term_end || '',
+      next_term_start: ts.next_term_start || '',
     };
-    return buildReportHtml(summary, subs.map(s => ({ subject_name: s.name, score: getScore(p.id, s.id) })));
+    return buildReportHtml(summary, subs.map(s => ({ subject_name: s.name, score: getScore(p.id, s.id), teacher_comment: getComment(p.id, s.id) })));
   });
   openReportWindow(`Hill View - All Reports (${pupils.length} pupils)`, pages.join(''));
 }
@@ -1731,8 +1790,8 @@ function MarksTable(classId, readOnly, showAddPupil) {
   // ── Add-pupil panel (bottom of excel block)
   if(canAdd){
     const panel=d('add-pupil-panel');
-    const icon=e('span',{style:'font-size:18px;flex-shrink:0'}); icon.textContent='＋';
-    const nameIn=e('input',{type:'text',placeholder:'New pupil full name…',style:'flex:1;max-width:280px'});
+    const icon=e('span',{style:'font-size:1.125rem;flex-shrink:0;line-height:1'}); icon.textContent='＋';
+    const nameIn=e('input',{type:'text',placeholder:'New pupil full name…',style:'flex:1;max-width:min(280px,100%)'});
     const addBtn=e('button',{class:'btn btn-primary btn-sm'}); addBtn.textContent='Add Pupil';
     const msg=e('span',{style:'font-size:12px;color:var(--muted)'});
 
@@ -1774,14 +1833,14 @@ function ViewOverview() {
 
   const cc=d('card');
   const ch=e('h3',{class:'section-h'}); ch.textContent='Class averages'; cc.appendChild(ch);
-  const cw=d('','position:relative;height:220px');
+  const cw=d('chart-wrap','position:relative;height:clamp(150px, 25vh, 220px)');
   const canvas=e('canvas',{id:'cls-chart',role:'img','aria-label':'Bar chart of class averages'}); cw.appendChild(canvas); cc.appendChild(cw); tc.appendChild(cc);
 
   const topCard=d('card');
   const th3=e('h3',{class:'section-h'}); th3.textContent='Top performer per class'; topCard.appendChild(th3);
   S.classPerf.slice(0,6).forEach(row=>{
     const r=d('','display:flex;align-items:center;gap:10px;margin-bottom:9px');
-    const cn=e('span',{class:'pill',style:'min-width:80px;text-align:center'}); cn.textContent=row.class_name; r.appendChild(cn);
+    const cn=e('span',{class:'pill',style:'min-width:5rem;text-align:center'}); cn.textContent=row.class_name; r.appendChild(cn);
     const nm=e('div',{style:'flex:1;font-size:13px;font-weight:500'}); nm.textContent=row.best_pupil||'–'; r.appendChild(nm);
     const av=e('span',{style:'font-size:12px;font-weight:600;color:var(--g)'}); av.textContent=parseFloat(row.average_score||0).toFixed(1)+'%'; r.appendChild(av);
     topCard.appendChild(r);
@@ -1871,7 +1930,7 @@ function ViewMarks() {
 
   const acts = d('marks-actions');
   const saveBtn = e('button', { class: 'btn btn-primary' });
-  saveBtn.style.cssText = 'min-width:120px;';
+  saveBtn.style.cssText = 'min-width:7.5rem;';
   saveBtn.disabled = S.saving;
   saveBtn.innerHTML = S.saving ? '<span class="spin"></span> Saving...' : 'Save Marks';
   saveBtn.addEventListener('click', saveMarks); acts.appendChild(saveBtn);
@@ -1955,7 +2014,7 @@ function TeacherMarks() {
 
   const acts = d('marks-actions');
   const saveBtn = e('button', { class: 'btn btn-primary' });
-  saveBtn.style.cssText = 'min-width:120px;';
+  saveBtn.style.cssText = 'min-width:7.5rem;';
   saveBtn.disabled = S.saving;
   saveBtn.innerHTML = S.saving ? '<span class="spin"></span> Saving...' : 'Save Marks';
   saveBtn.addEventListener('click', saveMarks);
@@ -2056,7 +2115,7 @@ function TeacherSummary() {
   const twoCol = d('two-col');
   const topCard = d('card');
   const thTop = e('h3', { class: 'section-h' }); thTop.textContent = 'Top Performer'; topCard.appendChild(thTop);
-  const topName = e('div', { style: 'font-size:18px;font-weight:700;color:var(--primary)' });
+  const topName = e('div', { style: 'font-size:1.125rem;font-weight:700;color:var(--primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap' });
   topName.textContent = topPupil; topCard.appendChild(topName);
   const topAvg = e('div', { style: 'font-size:13px;color:var(--muted);margin-top:4px' });
   topAvg.textContent = ranked.length ? `Average: ${ranked[0].avg.toFixed(1)}%` : '—';
@@ -2065,7 +2124,7 @@ function TeacherSummary() {
 
   const weakCard = d('card');
   const thWeak = e('h3', { class: 'section-h' }); thWeak.textContent = 'Needs Support'; weakCard.appendChild(thWeak);
-  const weakName = e('div', { style: 'font-size:18px;font-weight:700;color:var(--danger)' });
+  const weakName = e('div', { style: 'font-size:1.125rem;font-weight:700;color:var(--danger);overflow:hidden;text-overflow:ellipsis;white-space:nowrap' });
   weakName.textContent = weakest; weakCard.appendChild(weakName);
   const weakAvg = e('div', { style: 'font-size:13px;color:var(--muted);margin-top:4px' });
   weakAvg.textContent = ranked.length ? `Average: ${ranked[ranked.length - 1].avg.toFixed(1)}%` : '—';
@@ -2114,16 +2173,16 @@ function TeacherSummary() {
 function ViewAllClasses() {
   const c=d('content');
   const h=e('h2',{class:'page-h'}); h.textContent='All Classes'; c.appendChild(h);
-  const grid=d('','display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px');
+  const grid=d('','display:grid;grid-template-columns:repeat(auto-fill,minmax(min(240px,100%),1fr));gap:14px');
   S.classes.forEach(cls=>{
     const pups=S.pupils.filter(p=>p.class_id===cls.id);
     const subs=classSubs(cls.id);
     const perf=S.classPerf.find(r=>r.class_id===cls.id);
     const card=d('card');
-    const top=d('','display:flex;align-items:center;gap:12px;margin-bottom:12px');
-    const av=e('div',{style:'width:38px;height:38px;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--g);flex-shrink:0'}); av.textContent=cls.name.slice(0,2); top.appendChild(av);
-    const inf=d(''); const nm=e('div',{style:'font-size:14px;font-weight:700'}); nm.textContent=cls.name; inf.appendChild(nm);
-    const lv=e('div',{style:'font-size:12px;color:var(--muted)'}); lv.textContent=resolveLevel(cls.name); inf.appendChild(lv); top.appendChild(inf); card.appendChild(top);
+    const top=d('','display:flex;align-items:center;gap:12px;margin-bottom:12px;min-width:0');
+    const av=e('div',{style:'width:2.375rem;height:2.375rem;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:.8125rem;font-weight:700;color:var(--g);flex-shrink:0;overflow:hidden;text-overflow:ellipsis'}); av.textContent=cls.name.slice(0,2); top.appendChild(av);
+    const inf=d('','min-width:0'); const nm=e('div',{style:'font-size:.875rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap'}); nm.textContent=cls.name; inf.appendChild(nm);
+    const lv=e('div',{style:'font-size:.75rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap'}); lv.textContent=resolveLevel(cls.name); inf.appendChild(lv); top.appendChild(inf); card.appendChild(top);
     const pills=d('','display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px');
     const p1=e('span',{class:'pill'}); p1.textContent=`${pups.length} pupils`; pills.appendChild(p1);
     const p2=e('span',{class:'pill pill-grey'}); p2.textContent=`${subs.length} subjects`; pills.appendChild(p2);
@@ -2144,7 +2203,7 @@ function ViewSettings() {
   const c = d('content');
   const h = e('h2', { class: 'page-h' }); h.textContent = 'Settings'; c.appendChild(h);
 
-  const card = d('card', 'max-width:600px');
+  const card = d('card', 'max-width:min(600px, 100%)');
   const sh = e('h3', { class: 'section-h' }); sh.textContent = 'Academic Term'; card.appendChild(sh);
 
   const terms = [{ val: 'Term 1', lbl: 'Term 1' }, { val: 'Term 2', lbl: 'Term 2' }, { val: 'Term 3', lbl: 'Term 3' }];
@@ -2206,14 +2265,14 @@ function ViewReports() {
   // ── GENERATE ALL banner
   const genBanner=d('card','margin-bottom:20px;background:linear-gradient(135deg,#1e3a5f 0%,#0f1f35 100%);color:#fff;border:none');
   const genTop=d('gen-banner-top');
-  const genIcon=e('div',{style:'font-size:28px;flex-shrink:0'}); genIcon.textContent='📋'; genTop.appendChild(genIcon);
-  const genText=d('','flex:1;min-width:180px');
+  const genIcon=e('div',{style:'font-size:1.75rem;flex-shrink:0;line-height:1'}); genIcon.textContent='📋'; genTop.appendChild(genIcon);
+  const genText=d('','flex:1;min-width:0');
   const genTitle=e('div',{style:'font-size:16px;font-weight:700;margin-bottom:3px'}); genTitle.textContent='Generate All Report Cards'; genText.appendChild(genTitle);
   const genSub=e('div',{style:'font-size:12px;opacity:.85'}); genSub.textContent='Opens a single printable window with every pupil — one page per report. Use browser Print to export as PDF.'; genText.appendChild(genSub);
   genTop.appendChild(genText);
 
   // Class filter select
-  const genSel=e('select',{id:'gen-sel',class:'gen-sel',style:'width:auto;border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.15);color:#fff;flex-shrink:0'});
+  const genSel=e('select',{id:'gen-sel',class:'gen-sel',style:'width:auto;border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.15);color:#fff;flex-shrink:0;max-width:100%'});
   const optAll=e('option',{value:''}); optAll.textContent='All classes ('+S.pupils.length+' pupils)'; genSel.appendChild(optAll);
   S.classes.forEach(cls=>{
     const cnt=S.pupils.filter(p=>p.class_id===cls.id).length;
@@ -2221,7 +2280,7 @@ function ViewReports() {
   });
   genTop.appendChild(genSel);
 
-  const genBtn=e('button',{class:'gen-all-btn',style:'background:#fff;color:var(--primary);border:none;padding:10px 22px;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap;font-family:Outfit,sans-serif'});
+  const genBtn=e('button',{class:'gen-btn gen-all-btn',style:'background:#fff;color:var(--primary);border:none;padding:10px 22px;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap;font-family:Outfit,sans-serif'});
   genBtn.textContent='Generate All';
   genBtn.addEventListener('click',()=>{
     const filterVal=genSel.value||null;
@@ -2242,7 +2301,7 @@ function ViewReports() {
   const layout=d('report-layout');
 
   // sidebar pupil list
-  const aside=d('','background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:14px;max-height:70vh;overflow-y:auto');
+  const aside=d('report-sidebar','background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:.875rem;max-height:70vh;overflow-y:auto');
   const ah=e('h4',{style:'font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px'}); ah.textContent='Select Pupil'; aside.appendChild(ah);
   let lastCls='';
   S.reportPupils.forEach(p=>{
@@ -2399,12 +2458,12 @@ function initials(name) {
 function openAvatarLightbox(src, name) {
   const overlay = d('modal-overlay');
   overlay.style.cssText = 'background:rgba(0,0,0,.85)';
-  const box = d('', 'text-align:center;max-width:400px;width:90vw');
-  const nameEl = e('div', {style: 'font-size:15px;font-weight:700;color:#fff;margin-bottom:12px'});
+  const box = d('', 'text-align:center;max-width:min(400px, 90vw);width:90vw');
+  const nameEl = e('div', {style: 'font-size:.9375rem;font-weight:700;color:#fff;margin-bottom:.75rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap'});
   nameEl.textContent = name || '';
-  const img = e('img', {src, style: 'width:100%;max-width:320px;max-height:320px;border-radius:8px;border:3px solid #fff;object-fit:cover;box-shadow:0 8px 32px rgba(0,0,0,.5)', crossorigin: 'anonymous'});
-  img.onerror = () => { box.innerHTML = '<p style="color:#fff;font-size:18px;padding:40px">Image failed to load</p>'; };
-  const closeBtn = e('button', {style: 'margin-top:14px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);color:#fff;padding:8px 24px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600'});
+  const img = e('img', {src, style: 'width:100%;max-width:20rem;max-height:20rem;border-radius:.5rem;border:3px solid #fff;object-fit:cover;box-shadow:0 8px 32px rgba(0,0,0,.5)', crossorigin: 'anonymous'});
+  img.onerror = () => { box.innerHTML = '<p style="color:#fff;font-size:1.125rem;padding:2.5rem">Image failed to load</p>'; };
+  const closeBtn = e('button', {style: 'margin-top:.875rem;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);color:#fff;padding:.5rem 1.5rem;border-radius:.5rem;cursor:pointer;font-size:13px;font-weight:600'});
   closeBtn.textContent = 'Close';
   closeBtn.addEventListener('click', () => overlay.remove());
   overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
@@ -2432,7 +2491,7 @@ function ViewPupils() {
   addBtn.addEventListener('click', () => openPupilModal(null));
   ab.appendChild(addBtn);
 
-  const searchIn = e('input', {type: 'text', placeholder: 'Search pupils…', class: 'search-input', style: 'width:180px'});
+  const searchIn = e('input', {type: 'text', placeholder: 'Search pupils…', class: 'search-input'});
   if (S.pupilSearch) searchIn.value = S.pupilSearch;
   searchIn.addEventListener('input', () => { S.pupilSearch = searchIn.value.trim(); render(); });
   searchIn.addEventListener('keydown', ev => { if (ev.key === 'Enter') render(); });
@@ -2483,7 +2542,7 @@ function ViewPupils() {
       const cls = S.classes.find(c => c.id === p.class_id);
 
       const tdA = document.createElement('td');
-      const avWrap = d('', 'width:42px;height:42px;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--g);overflow:hidden;cursor:pointer');
+      const avWrap = d('', 'width:2.625rem;height:2.625rem;border-radius:50%;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:.875rem;font-weight:700;color:var(--g);overflow:hidden;cursor:pointer;flex-shrink:0');
       avWrap.title = 'Click to enlarge';
       if (p.avatar) {
         const avImg = e('img', {src: p.avatar, style: 'width:100%;height:100%;object-fit:cover', crossorigin: 'anonymous'});
@@ -2596,6 +2655,18 @@ async function openPupilModal(pupil) {
   });
   clsGroup.appendChild(clsLabel); clsGroup.appendChild(clsSel); box.appendChild(clsGroup);
 
+  const houseGroup = d('form-group');
+  const houseLabel = e('label'); houseLabel.textContent = 'House';
+  const houseIn = e('input', {type: 'text', placeholder: 'e.g. Red, Blue', id: 'pm-house'});
+  if (!isNew && pupil.house) houseIn.value = pupil.house;
+  houseGroup.appendChild(houseLabel); houseGroup.appendChild(houseIn); box.appendChild(houseGroup);
+
+  const payGroup = d('form-group');
+  const payLabel = e('label'); payLabel.textContent = 'School Pay Code';
+  const payIn = e('input', {type: 'text', placeholder: 'e.g. P001', id: 'pm-pay'});
+  if (!isNew && pupil.paycode) payIn.value = pupil.paycode;
+  payGroup.appendChild(payLabel); payGroup.appendChild(payIn); box.appendChild(payGroup);
+
   const foot = d('modal-foot');
   const cancelBtn = e('button', {class: 'btn btn-ghost'}); cancelBtn.textContent = 'Cancel';
   cancelBtn.addEventListener('click', () => overlay.remove());
@@ -2604,15 +2675,18 @@ async function openPupilModal(pupil) {
   saveBtn.addEventListener('click', async () => {
     const name = nameIn.value.trim();
     const classId = clsSel.value;
+    const house = houseIn.value.trim();
+    const paycode = payIn.value.trim();
     if (!name) { flashToast('Name is required', 'err'); return; }
     saveBtn.disabled = true; saveBtn.innerHTML = '<span class="spin"></span>';
+    const payload = {name, class_id: classId, house, paycode};
     if (isNew) {
-      const {data, error} = await db.from('pupils').insert({name, class_id: classId}).select('id,name,class_id,avatar').single();
+      const {data, error} = await db.from('pupils').insert(payload).select('id,name,class_id,avatar,house,paycode').single();
       if (!error) S.pupilsList.push(data);
     } else {
-      await db.from('pupils').update({name, class_id: classId}).eq('id', pupil.id);
+      await db.from('pupils').update(payload).eq('id', pupil.id);
       const idx = S.pupilsList.findIndex(x => x.id === pupil.id);
-      if (idx >= 0) S.pupilsList[idx] = {...S.pupilsList[idx], name, class_id: classId};
+      if (idx >= 0) S.pupilsList[idx] = {...S.pupilsList[idx], ...payload};
     }
     flashToast(isNew ? 'Pupil added!' : 'Pupil updated!', 'ok');
     overlay.remove();
@@ -2662,7 +2736,7 @@ function ViewTeachers() {
   addBtn.addEventListener('click', () => openTeacherModal(null));
   ab.appendChild(addBtn);
 
-  const searchIn = e('input', {type: 'text', placeholder: 'Search teachers…', class: 'search-input', style: 'width:180px'});
+  const searchIn = e('input', {type: 'text', placeholder: 'Search teachers…', class: 'search-input'});
   if (S.teacherSearch) searchIn.value = S.teacherSearch;
   searchIn.addEventListener('input', () => { S.teacherSearch = searchIn.value.trim(); render(); });
   searchIn.addEventListener('keydown', ev => { if (ev.key === 'Enter') render(); });
@@ -2967,13 +3041,13 @@ async function deleteTeacher(teacher) {
 function renderNavbar() {
   const nav=e('nav',{class:'navbar'});
   const t=e('span',{class:'nav-brand'});
-  const bImg=e('img',{src:'badge.png',alt:'Hill View',style:'width:28px;height:28px;border-radius:4px;object-fit:contain;flex-shrink:0'});
+  const bImg=e('img',{src:'badge.png',alt:'Hill View',style:'width:1.75rem;height:1.75rem;border-radius:4px;object-fit:contain;flex-shrink:0'});
   const bText=e('span',{class:'nav-brand-text'}); bText.textContent='Hill View Primary School';
   t.appendChild(bImg); t.appendChild(bText); nav.appendChild(t);
   
-  const av=e('span',{style:'display:flex;align-items:center;gap:8px;margin-left:auto;margin-right:12px'});
+  const av=e('span',{class:'nav-user-area',style:'display:flex;align-items:center;gap:8px;margin-left:auto;margin-right:12px'});
   if (S.user.avatar) {
-    const avImg=e('img',{src:S.user.avatar,style:'width:28px;height:28px;border-radius:50%;object-fit:cover',crossorigin:'anonymous'});
+    const avImg=e('img',{src:S.user.avatar,style:'width:1.75rem;height:1.75rem;border-radius:50%;object-fit:cover',crossorigin:'anonymous'});
     avImg.onerror=()=>{av.innerHTML='';};
     av.appendChild(avImg);
   }

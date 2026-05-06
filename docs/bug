@@ -1,14 +1,4 @@
 All bugs have been fixed:
 
-1. [DONE] provide space for teacher to edit comments - added teacher_comment field, input columns in marks table, display in reports
-2. [SKIPPED] *automate requirement balances
-3. [DONE] update db to contain pupil avatar - schema updated (avatar column added)
-4. [DONE] provide admin access to update pupil avatar - API routes updated (PUT /api/pupils)
-5. [DONE] add student details: house, paycode - schema and API updated
-6. [DONE] admin should give a teacher access to classes they teach - teacher_classes table, admin UI tabs
-7. [DONE] recreate the admin ui - AdminDashboardClient with full CRUD (classes, teachers, pupils, assignments)
-8. [DONE] when the admin creates a new teacher, give option to assign role - role dropdown in AddTeacherForm
-9. [DONE] responsiveness to below 490px - CSS media query added
-10. [DONE] new report card formats - reports.html was created, format integrated into index.html
-11. [DONE] nursery teacher can give the color they want to shade on each option - level colors in MarksEntryClient
-12. [DONE] reports.html formats applied to docs/index.html - PRIMARY_REPORT_SUBJECTS, grading scale, comments section
+fix comment addition to report, put the term, dates as input by admin
+

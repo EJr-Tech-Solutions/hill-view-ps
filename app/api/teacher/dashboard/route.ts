@@ -50,8 +50,8 @@ export async function GET(req: NextRequest) {
     .eq("teacher_id", appUser.id);
 
   const assignedClasses: { id: string; name: string }[] = (teacherClasses ?? [])
-    .map((tc) => tc.classes as { id: string; name: string })
-    .filter(Boolean);
+    .flatMap((tc) => (Array.isArray(tc.classes) ? tc.classes : tc.classes ? [tc.classes] : []))
+    .map((c) => ({ id: String(c.id), name: String(c.name) }));
 
   // Fallback to users.class_id if no teacher_classes entries
   if (assignedClasses.length === 0 && appUser.class_id) {

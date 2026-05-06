@@ -53,7 +53,7 @@ export async function GET() {
 
   const { data: pupils } = await supabase
     .from("pupils")
-    .select("id, name")
+    .select("id, name, avatar, house, paycode")
     .eq("class_id", appUser.class_id)
     .order("name");
 

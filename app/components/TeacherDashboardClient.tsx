@@ -7,6 +7,9 @@ import MarksEntryClient from "./MarksEntryClient";
 type Pupil = {
   id: string;
   name: string;
+  avatar?: string | null;
+  house?: string | null;
+  paycode?: string | null;
 };
 
 type Subject = {

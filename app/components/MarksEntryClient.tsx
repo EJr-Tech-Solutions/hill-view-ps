@@ -6,6 +6,9 @@ type Pupil = {
   id: string;
   name: string;
   class_id?: string;
+  avatar?: string | null;
+  house?: string | null;
+  paycode?: string | null;
 };
 
 type Subject = {
@@ -124,6 +127,18 @@ export default function MarksEntryClient({
     4: "#1a6b3c",
     5: "#1a6b3c",
   });
+  const [selectedPupil, setSelectedPupil] = useState<Pupil | null>(null);
+  const [showPupilModal, setShowPupilModal] = useState(false);
+
+  const openPupilModal = (pupil: Pupil) => {
+    setSelectedPupil(pupil);
+    setShowPupilModal(true);
+  };
+
+  const closePupilModal = () => {
+    setShowPupilModal(false);
+    setSelectedPupil(null);
+  };
 
   useEffect(() => {
     setPupilList(pupils);
@@ -421,7 +436,12 @@ export default function MarksEntryClient({
                       <span style={{ fontSize: "10px", color: "var(--muted)", minWidth: "16px", textAlign: "right" }}>
                         {rowIdx + 1}
                       </span>
-                      <span>{pupil.name}</span>
+                      <button
+                        onClick={() => openPupilModal(pupil)}
+                        style={{ background: "none", border: "none", color: "var(--primary)", cursor: "pointer", textAlign: "left", padding: 0, fontSize: "inherit", textDecoration: "underline" }}
+                      >
+                        {pupil.name}
+                      </button>
                     </div>
                   </td>
                   {subjects.map((subject) => {
@@ -507,6 +527,55 @@ export default function MarksEntryClient({
       <div className={`save-toast ${showToast ? "show" : ""}`}>
         ✓ Marks saved
       </div>
+
+      {/* Pupil Details Modal */}
+      {showPupilModal && selectedPupil && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: "rgba(0,0,0,0.5)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 1000,
+        }} onClick={closePupilModal}>
+          <div style={{
+            background: "#fff",
+            borderRadius: "12px",
+            padding: "24px",
+            maxWidth: "420px",
+            width: "90%",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+          }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+              <h3 style={{ margin: 0, color: "#1a6b3c" }}>Pupil Details</h3>
+              <button onClick={closePupilModal} style={{ background: "none", border: "none", fontSize: "20px", cursor: "pointer", color: "#666" }}>×</button>
+            </div>
+            <div style={{ display: "flex", gap: "16px", marginBottom: "16px" }}>
+              <div style={{ width: "80px", height: "96px", border: "2px solid #ccc", background: "#f0f0f0", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "6px", overflow: "hidden", flexShrink: 0 }}>
+                {selectedPupil.avatar ? (
+                  <img src={selectedPupil.avatar} alt={selectedPupil.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                ) : (
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#bbb" strokeWidth="1.2">
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                  </svg>
+                )}
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: "18px", fontWeight: 700, color: "#1a6b3c", marginBottom: "8px" }}>{selectedPupil.name}</div>
+                <div style={{ fontSize: "13px", color: "#555", marginBottom: "4px" }}><strong>House:</strong> {selectedPupil.house || "—"}</div>
+                <div style={{ fontSize: "13px", color: "#555", marginBottom: "4px" }}><strong>School Pay Code:</strong> {selectedPupil.paycode || "—"}</div>
+                <div style={{ fontSize: "13px", color: "#555" }}><strong>Class:</strong> {classId}</div>
+              </div>
+            </div>
+            <button className="btn btn-primary" onClick={closePupilModal} style={{ width: "100%" }}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

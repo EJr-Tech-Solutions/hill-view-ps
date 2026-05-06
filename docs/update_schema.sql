@@ -36,6 +36,19 @@ create policy marks_teacher_all on marks
   for all using (app_user_role() = 'teacher')
   with check (app_user_role() = 'teacher');
 
+-- 6b. Fix users policy for admin user creation (prevents FK/race issues)
+drop policy if exists users_admin_all on users;
+create policy users_admin_all on users
+  for all using (
+    auth.uid() in (select id from users where role = 'admin')
+  )
+  with check (
+    auth.uid() in (select id from users where role = 'admin')
+  );
+
+-- 6c. Drop FK constraint on users.id -> auth.users.id to prevent race conditions
+alter table users drop constraint if exists users_id_fkey;
+
 -- 7. Teacher classes policies
 drop policy if exists teacher_classes_admin_all on teacher_classes;
 drop policy if exists teacher_classes_teacher_select on teacher_classes;

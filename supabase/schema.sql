@@ -8,12 +8,17 @@ create table if not exists classes (
 );
 
 create table if not exists users (
-  id uuid primary key references auth.users (id) on delete cascade,
+  id uuid primary key default uuid_generate_v4(),
   name text not null,
   email text not null unique,
   role text not null check (role in ('admin', 'teacher')),
-  class_id uuid references classes (id)
+  class_id uuid references classes (id),
+  avatar text
 );
+
+-- NOTE: No FK from users.id → auth.users.id. This was dropped to prevent
+-- race conditions and FK errors during teacher creation. The app manages
+-- the auth-to-users relationship by inserting with id = auth.user.id.
 
 -- Teacher can teach multiple classes
 create table if not exists teacher_classes (
@@ -72,11 +77,27 @@ create table if not exists term_settings (
   next_term_start date
 );
 
+-- Academic terms for admin configuration
+create table if not exists academic_terms (
+  id uuid primary key default gen_random_uuid(),
+  term text not null check (term in ('Term 1', 'Term 2', 'Term 3')),
+  year integer not null,
+  start_date date not null,
+  end_date date not null,
+  stream text default 'Main',
+  is_active boolean default false,
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now(),
+  unique (term, year)
+);
+
 -- Helper functions for RLS
 create or replace function app_user_role()
 returns text
 language sql
 stable
+security definer
+set search_path = public
 as $$
   select role from users where id = auth.uid();
 $$;
@@ -85,6 +106,8 @@ create or replace function app_user_class()
 returns uuid
 language sql
 stable
+security definer
+set search_path = public
 as $$
   select class_id from users where id = auth.uid() and role = 'admin'
   union
@@ -97,9 +120,9 @@ create or replace function set_mark_teacher()
 returns trigger
 language plpgsql
 security definer
+set search_path = public
 as $$
 begin
-  -- Preserve explicit teacher_id for seed/admin inserts.
   if new.teacher_id is null then
     new.teacher_id := auth.uid();
   end if;
@@ -112,12 +135,49 @@ create trigger mark_teacher_trigger
 before insert on marks
 for each row execute procedure set_mark_teacher();
 
+-- Function to get active academic term
+create or replace function get_active_term()
+returns table (
+  id uuid,
+  term text,
+  year integer,
+  start_date date,
+  end_date date,
+  stream text
+)
+language sql
+security definer
+set search_path = public
+as $$
+  select id, term, year, start_date, end_date, stream
+  from academic_terms
+  where is_active = true
+  limit 1;
+$$;
+
+-- Function to set active term (deactivates others)
+create or replace function set_active_term(term_id uuid)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  update academic_terms set is_active = false where is_active = true;
+  update academic_terms set is_active = true, updated_at = now() where id = term_id;
+end;
+$$;
+
 -- Row Level Security
 alter table classes enable row level security;
 alter table users enable row level security;
 alter table pupils enable row level security;
 alter table subjects enable row level security;
 alter table marks enable row level security;
+alter table teacher_classes enable row level security;
+alter table nursery_color_config enable row level security;
+alter table term_settings enable row level security;
+alter table academic_terms enable row level security;
 
 -- Classes policies
 create policy classes_admin_all on classes
@@ -136,8 +196,12 @@ create policy classes_teacher_select on classes
 
 -- Users policies
 create policy users_admin_all on users
-  for all using (app_user_role() = 'admin')
-  with check (app_user_role() = 'admin');
+  for all using (
+    auth.uid() in (select id from users where role = 'admin')
+  )
+  with check (
+    auth.uid() in (select id from users where role = 'admin')
+  );
 
 create policy users_self_select on users
   for select using (id = auth.uid());
@@ -187,9 +251,11 @@ create policy pupils_teacher_update on pupils
 create policy subjects_read_all on subjects
   for select using (auth.uid() is not null);
 
--- Teacher Classes policies
-alter table teacher_classes enable row level security;
+create policy subjects_admin_all on subjects
+  for all using (app_user_role() = 'admin')
+  with check (app_user_role() = 'admin');
 
+-- Teacher Classes policies
 create policy teacher_classes_admin_all on teacher_classes
   for all using (app_user_role() = 'admin')
   with check (app_user_role() = 'admin');
@@ -204,8 +270,6 @@ create policy teacher_classes_teacher_delete on teacher_classes
   for delete using (teacher_id = auth.uid());
 
 -- Nursery Color Config policies
-alter table nursery_color_config enable row level security;
-
 create policy nursery_color_config_admin_all on nursery_color_config
   for all using (app_user_role() = 'admin')
   with check (app_user_role() = 'admin');
@@ -220,18 +284,23 @@ create policy marks_admin_all on marks
   with check (app_user_role() = 'admin');
 
 create policy marks_teacher_all on marks
-  for all using (
-    app_user_role() = 'teacher'
-  );
+  for all using (app_user_role() = 'teacher')
+  with check (app_user_role() = 'teacher');
 
 -- Term Settings policies
-alter table term_settings enable row level security;
-
 create policy term_settings_admin_all on term_settings
   for all using (app_user_role() = 'admin')
   with check (app_user_role() = 'admin');
 
 create policy term_settings_read_all on term_settings
+  for select using (auth.uid() is not null);
+
+-- Academic Terms policies
+create policy academic_terms_admin_all on academic_terms
+  for all using (app_user_role() = 'admin')
+  with check (app_user_role() = 'admin');
+
+create policy academic_terms_teacher_select on academic_terms
   for select using (auth.uid() is not null);
 
 -- Views for analytics and reporting
@@ -362,19 +431,40 @@ teacher_marks as (
   select
     u.id as teacher_id,
     u.name as teacher_name,
-    c.id as class_id,
+    tc.class_id,
     c.name as class_name,
     count(distinct m.subject_id) as subjects_entered
   from users u
-  join classes c on c.id = u.class_id
-  left join marks m on m.teacher_id = u.id
+  join teacher_classes tc on tc.teacher_id = u.id
+  join classes c on c.id = tc.class_id
+  left join marks m on m.teacher_id = u.id and m.pupil_id in (
+    select p.id from pupils p where p.class_id = tc.class_id
+  )
   where u.role = 'teacher'
-  group by u.id, c.id
+  group by u.id, u.name, tc.class_id, c.name
+  union
+  -- Include teachers with no marks yet (show 0 subjects entered)
+  select
+    u.id as teacher_id,
+    u.name as teacher_name,
+    tc.class_id,
+    c.name as class_name,
+    0 as subjects_entered
+  from users u
+  join teacher_classes tc on tc.teacher_id = u.id
+  join classes c on c.id = tc.class_id
+  where u.role = 'teacher'
+    and not exists (
+      select 1 from marks m
+      join pupils p on p.id = m.pupil_id
+      where m.teacher_id = u.id and p.class_id = tc.class_id
+    )
 )
 select
   teacher_marks.teacher_name,
   teacher_marks.class_name,
-  teacher_marks.subjects_entered,
+  max(teacher_marks.subjects_entered) as subjects_entered,
   class_subject_counts.subject_count
 from teacher_marks
-join class_subject_counts on class_subject_counts.class_id = teacher_marks.class_id;
+join class_subject_counts on class_subject_counts.class_id = teacher_marks.class_id
+group by teacher_marks.teacher_name, teacher_marks.class_name, class_subject_counts.subject_count;

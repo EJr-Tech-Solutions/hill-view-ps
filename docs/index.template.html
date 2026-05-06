@@ -1071,12 +1071,14 @@ async function loadReportPupils() {
 async function loadReportForPupil(pupilId) {
   S.reportSelId=pupilId;
   const [sumR,subjR,pupR] = await Promise.all([
-    db.from('pupil_report_summary').select('pupil_id,pupil_name,class_name,total_score,average_score,position,uneb_grade').eq('pupil_id',pupilId).single(),
+    db.from('pupil_report_summary').select('pupil_id,pupil_name,class_name,total_score,average_score,position,uneb_grade').eq('pupil_id',pupilId).limit(1),
     db.from('pupil_report_subjects').select('subject_name,score,teacher_comment').eq('pupil_id',pupilId),
-    db.from('pupils').select('id,avatar,house,paycode').eq('id',pupilId).single(),
+    db.from('pupils').select('id,avatar,house,paycode').eq('id',pupilId).limit(1),
   ]);
   const ts = S.termSettings || { term: '', term_start: '', term_end: '', next_term_start: '' };
-  S.reportSummary  = sumR.data ? {...sumR.data, pupil_avatar: pupR.data?.avatar||null, house: pupR.data?.house||'', paycode: pupR.data?.paycode||'', term: ts.term, term_start: ts.term_start, term_end: ts.term_end, next_term_start: ts.next_term_start} : null;
+  const sum = sumR.data?.[0]||null;
+  const pup = pupR.data?.[0]||null;
+  S.reportSummary  = sum ? {...sum, pupil_avatar: pup?.avatar||null, house: pup?.house||'', paycode: pup?.paycode||'', term: ts.term, term_start: ts.term_start, term_end: ts.term_end, next_term_start: ts.next_term_start} : null;
   S.reportSubjects = subjR.data||[];
   render();
 }
@@ -1085,8 +1087,8 @@ async function loadReportForPupil(pupilId) {
 //  TERM SETTINGS
 // ══════════════════════════════════════════════════
 async function loadTermSettings() {
-  const { data } = await db.from('term_settings').select('*').limit(1).single();
-  S.termSettings = data || { id: null, term: '', term_start: '', term_end: '', next_term_start: '' };
+  const { data } = await db.from('term_settings').select('*').limit(1);
+  S.termSettings = (data && data.length > 0) ? data[0] : { id: null, term: '', term_start: '', term_end: '', next_term_start: '' };
 }
 
 async function saveTermSettings(term, termStart, termEnd, nextTermStart) {

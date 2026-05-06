@@ -1240,10 +1240,11 @@ async function signIn(email,pw) {
     return 'Auth error: '+error.message;
   }
   // Read from 'users' table — matches hill-view-ps schema (NOT 'profiles')
-  const {data:u,error:ue} = await db.from('users').select('id,name,email,role,class_id,avatar').eq('id',data.user.id).single();
-  if(ue) return `Auth OK but users table error: "${ue.message}". Check that mock_data.sql was run with the correct auth user IDs.`;
-  if(!u) return 'Auth OK but no row in users table for this account. Run mock_data.sql and replace UUID placeholders with real auth user IDs.';
-  S.user=u; S.view=u.role==='admin'?'overview':'marks';
+  const {data:u,error:ue} = await db.from('users').select('id,name,email,role,class_id,avatar').eq('id',data.user.id).limit(1);
+  if(ue) return `Login failed: "${ue.message}"`;
+  if(!u || u.length === 0) return 'Login failed: no user profile found. Contact admin.';
+  const profile = u[0];
+  S.user=profile; S.view=profile.role==='admin'?'overview':'marks';
   await loadAll(); return null;
 }
 
@@ -2965,7 +2966,11 @@ async function openTeacherModal(teacher) {
         }
         console.log('Created teacher with classes:', assignedClassIds);
         S.teachersList.push({id: newUser.id, name, email, role, class_id: classId});
-        flashToast('Teacher created! Login details sent to email.', 'ok');
+        // Send password reset email
+        const resetRedirect = window.location.origin + window.location.pathname;
+        const {error: resetErr} = await db.auth.resetPasswordForEmail(email, {redirectTo: resetRedirect + '#reset-password'});
+        if (resetErr) console.warn('Reset email failed:', resetErr);
+        flashToast('Teacher created! Password reset email sent to ' + email, 'ok');
       } catch (err) {
         flashToast('Signup unavailable. Create user in Supabase dashboard.', 'err');
         saveBtn.disabled = false; saveBtn.textContent = 'Create Teacher';
@@ -3035,11 +3040,11 @@ async function deleteTeacher(teacher) {
       if(!pw||pw.length<6){flashToast('Password must be at least 6 characters','err');btn.disabled=false;btn.textContent='Set Password';return;}
       if(pw!==cpw){flashToast('Passwords do not match','err');btn.disabled=false;btn.textContent='Set Password';return;}
       try {
-        const {error, data} = await db.auth.updateUser({password:pw});
+        const {error} = await db.auth.updateUser({password:pw});
         if(error){flashToast('Error: '+error.message,'err');btn.disabled=false;btn.textContent='Set Password';return;}
-        flashToast('Password set! Please sign in.','ok');
-        window.location.hash='';
-        setTimeout(()=>render(),1500);
+        await db.auth.signOut();
+        flashToast('Password set! You can now sign in.','ok');
+        window.location.href=window.location.pathname;
       } catch(e) {
         flashToast('Error setting password. Link may have expired.', 'err');
         btn.disabled=false; btn.textContent='Set Password';
@@ -3219,8 +3224,8 @@ function toggleSidebar(){
   }
   const {data:{session}}=await db.auth.getSession();
   if(session){
-    const {data:u}=await db.from('users').select('id,name,email,role,class_id,avatar').eq('id',session.user.id).single();
-    if(u){S.user=u;S.view=u.role==='admin'?'overview':'marks';await loadAll();return;}
+    const {data:u,error:uErr}=await db.from('users').select('id,name,email,role,class_id,avatar').eq('id',session.user.id).limit(1);
+    if(!uErr&&u&&u.length>0){const profile=u[0];S.user=profile;S.view=profile.role==='admin'?'overview':'marks';await loadAll();return;}
   }
   S.loading=false; render();
   db.auth.onAuthStateChange(ev=>{

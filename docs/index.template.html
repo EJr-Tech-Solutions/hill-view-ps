@@ -2953,7 +2953,11 @@ async function openTeacherModal(teacher) {
         }
         if (!authUser || !authUser.user) { flashToast('Signup failed. Enable confirmations in Supabase settings.', 'err'); saveBtn.disabled = false; saveBtn.textContent = 'Create Teacher'; return; }
         const newUser = authUser.user;
-        await db.from('users').insert({id: newUser.id, name, email, role, class_id: classId});
+        const {error: insertErr} = await db.from('users').insert({id: newUser.id, name, email, role, class_id: classId});
+        if (insertErr) { flashToast('User created in auth but DB insert failed: ' + insertErr.message, 'err'); console.error('Insert error:', insertErr); saveBtn.disabled = false; saveBtn.textContent = 'Create Teacher'; return; }
+        // Verify the user row actually exists
+        const {data: verifyUser, error: verifyErr} = await db.from('users').select('id').eq('id', newUser.id).single();
+        if (verifyErr || !verifyUser) { flashToast('User row not found after insert — RLS issue. Check SQL Editor.', 'err'); console.error('Verify failed:', verifyErr); saveBtn.disabled = false; saveBtn.textContent = 'Create Teacher'; return; }
         // Add to teacher_classes for all selected classes
         for (const cid of assignedClassIds) {
           try {
@@ -2963,7 +2967,7 @@ async function openTeacherModal(teacher) {
         }
         console.log('Created teacher with classes:', assignedClassIds);
         S.teachersList.push({id: newUser.id, name, email, role, class_id: classId});
-        flashToast('Teacher invited! Check email to confirm.', 'ok');
+        flashToast('Teacher created! Login details sent to email.', 'ok');
       } catch (err) {
         flashToast('Signup unavailable. Create user in Supabase dashboard.', 'err');
         saveBtn.disabled = false; saveBtn.textContent = 'Create Teacher';

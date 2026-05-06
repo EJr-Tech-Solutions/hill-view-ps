@@ -1054,7 +1054,12 @@ async function loadTermSettings() {
 }
 
 async function saveTermSettings(term, termStart, termEnd, nextTermStart) {
-  const row = { term, term_start: termStart, term_end: termEnd, next_term_start: nextTermStart };
+  const row = {
+    term,
+    term_start: termStart || null,
+    term_end: termEnd || null,
+    next_term_start: nextTermStart || null,
+  };
   if (S.termSettings?.id) {
     const { error } = await db.from('term_settings').update(row).eq('id', S.termSettings.id);
     if (error) return error.message;
@@ -2900,7 +2905,8 @@ async function openTeacherModal(teacher) {
     if (isNew) {
       if (!email || !pw) { flashToast('Email and password required', 'err'); saveBtn.disabled = false; saveBtn.textContent = 'Create Teacher'; return; }
       try {
-        const {data: authUser, error: authErr} = await db.auth.signUp({email, password: pw, options: {data: {name, role, class_id: classId}}});
+        const redirectUrl = window.location.origin + window.location.pathname;
+        const {data: authUser, error: authErr} = await db.auth.signUp({email, password: pw, options: {data: {name, role, class_id: classId}, emailRedirectTo: redirectUrl}});
         if (authErr) { 
           if (authErr.message.includes('429') || authErr.message.includes('rate limit')) {
             flashToast('Rate limited. Wait a moment then try again.', 'err');

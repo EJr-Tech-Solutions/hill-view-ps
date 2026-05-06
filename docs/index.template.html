@@ -2951,13 +2951,16 @@ async function openTeacherModal(teacher) {
           }
           saveBtn.disabled = false; saveBtn.textContent = 'Create Teacher'; return; 
         }
-        if (!authUser || !authUser.user) { flashToast('Signup failed. Enable confirmations in Supabase settings.', 'err'); saveBtn.disabled = false; saveBtn.textContent = 'Create Teacher'; return; }
+        if (!authUser || !authUser.user) { flashToast('Signup failed.', 'err'); saveBtn.disabled = false; saveBtn.textContent = 'Create Teacher'; return; }
         const newUser = authUser.user;
-        const {error: insertErr} = await db.from('users').insert({id: newUser.id, name, email, role, class_id: classId});
-        if (insertErr) { flashToast('User created in auth but DB insert failed: ' + insertErr.message, 'err'); console.error('Insert error:', insertErr); saveBtn.disabled = false; saveBtn.textContent = 'Create Teacher'; return; }
-        // Verify the user row actually exists
-        const {data: verifyUser, error: verifyErr} = await db.from('users').select('id').eq('id', newUser.id).single();
-        if (verifyErr || !verifyUser) { flashToast('User row not found after insert — RLS issue. Check SQL Editor.', 'err'); console.error('Verify failed:', verifyErr); saveBtn.disabled = false; saveBtn.textContent = 'Create Teacher'; return; }
+        // Wait for DB trigger to create the users row
+        let verified = false;
+        for (let i = 0; i < 10; i++) {
+          const {data: v} = await db.from('users').select('id').eq('id', newUser.id).single();
+          if (v) { verified = true; break; }
+          await new Promise(r => setTimeout(r, 500));
+        }
+        if (!verified) { flashToast('User created but DB sync failed. Check Supabase SQL trigger.', 'err'); saveBtn.disabled = false; saveBtn.textContent = 'Create Teacher'; return; }
         // Add to teacher_classes for all selected classes
         for (const cid of assignedClassIds) {
           try {

@@ -878,7 +878,7 @@ const S = {
   user: null,          // from users table
   view: 'overview',
   // data
-  classes: [], subjects: [], pupils: [], marksMap: {},
+  classes: [], subjects: [], pupils: [], marksMap: {}, commentsMap: {},
   // admin analytics (from views)
   classPerf: [], submissions: [],
   // teacher
@@ -929,6 +929,10 @@ const markKey = (pid, sid) => `${pid}::${sid}`;
 const getScore = (pid, sid) => {
   const k = markKey(pid, sid);
   return S.pending[k] !== undefined ? S.pending[k] : (S.marksMap[k] ?? 0);
+};
+const getComment = (pid, sid) => {
+  const k = markKey(pid, sid);
+  return S.commentsMap[k] || '';
 };
 
 function classSubs(classId) {
@@ -993,11 +997,12 @@ async function loadAll() {
 
   // Marks
   S.marksMap = {};
+  S.commentsMap = {};
   const pids = S.pupils.map(p=>p.id);
   if(pids.length) {
     for(let i=0;i<pids.length;i+=200) {
       const {data:mks} = await db.from('marks').select('pupil_id,subject_id,score,teacher_comment').in('pupil_id',pids.slice(i,i+200));
-      (mks||[]).forEach(m=>{ S.marksMap[markKey(m.pupil_id,m.subject_id)]=m.score; });
+      (mks||[]).forEach(m=>{ S.marksMap[markKey(m.pupil_id,m.subject_id)]=m.score; if(m.teacher_comment) S.commentsMap[markKey(m.pupil_id,m.subject_id)]=m.teacher_comment; });
     }
   }
 
@@ -1204,7 +1209,7 @@ async function signIn(email,pw) {
 async function signOut() {
   await db.auth.signOut();
   unsubscribeAll();
-  Object.assign(S,{user:null,view:'overview',classes:[],subjects:[],pupils:[],marksMap:{},classPerf:[],submissions:[],selClass:null,teacherClassIds:[],pending:{},saving:false,saveMsg:null,reportPupils:[],reportSelId:null,reportSummary:null,reportSubjects:[],pupilsList:[],teachersList:[],teachersLoaded:false,pupilsLoaded:false,loading:false,chartInst:null});
+  Object.assign(S,{user:null,view:'overview',classes:[],subjects:[],pupils:[],marksMap:{},commentsMap:{},classPerf:[],submissions:[],selClass:null,teacherClassIds:[],pending:{},saving:false,saveMsg:null,reportPupils:[],reportSelId:null,reportSummary:null,reportSubjects:[],pupilsList:[],teachersList:[],teachersLoaded:false,pupilsLoaded:false,loading:false,chartInst:null});
   render();
 }
 
@@ -1585,8 +1590,10 @@ function openReportWindow(title, bodyHtml) {
 }
 
 function printReport(summary, subjects) {
+  const ts = S.termSettings || { term: '', term_start: '', term_end: '', next_term_start: '' };
+  const enriched = {...summary, term: summary.term || ts.term, term_start: summary.term_start || ts.term_start, term_end: summary.term_end || ts.term_end, next_term_start: summary.next_term_start || ts.next_term_start};
   const title = `Hill View Report Card - ${summary.pupil_name}`;
-  openReportWindow(title, buildReportHtml(summary, subjects));
+  openReportWindow(title, buildReportHtml(enriched, subjects));
 }
 
 function generateAllReports(filterClass) {
@@ -3157,7 +3164,7 @@ function render() {
   }
   S.loading=false; render();
   db.auth.onAuthStateChange(ev=>{
-    if(ev==='SIGNED_OUT'){unsubscribeAll();Object.assign(S,{user:null,loading:false,classes:[],subjects:[],pupils:[],marksMap:{},classPerf:[],submissions:[],selClass:null,teacherClassIds:[],selPupilClass:null,pending:{},saving:false,saveMsg:null,reportPupils:[],reportSelId:null,reportSummary:null,reportSubjects:[],pupilsList:[],teachersList:[],teachersLoaded:false,pupilsLoaded:false});render();}
+    if(ev==='SIGNED_OUT'){unsubscribeAll();Object.assign(S,{user:null,loading:false,classes:[],subjects:[],pupils:[],marksMap:{},commentsMap:{},classPerf:[],submissions:[],selClass:null,teacherClassIds:[],selPupilClass:null,pending:{},saving:false,saveMsg:null,reportPupils:[],reportSelId:null,reportSummary:null,reportSubjects:[],pupilsList:[],teachersList:[],teachersLoaded:false,pupilsLoaded:false});render();}
   });
 })();
 </script>

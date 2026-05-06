@@ -1,4 +1,12 @@
 All bugs have been fixed:
 
 fix comment addition to report, put the term, dates as input by admin
+- Reports now use admin-set term, term_end, next_term_start from term_settings
+- Teacher comments (teacher_comment) loaded from marks table and displayed in reports
+- generateAllReports and printReport both enriched with term settings
+- getComment() helper added to retrieve teacher comments per pupil/subject
 
+allow edit of house and paycode for pupil
+- Pupil modal now includes House and School Pay Code input fields
+- Both fields saved to DB on add and edit
+- Values displayed on report cards in info row

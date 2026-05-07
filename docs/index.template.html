@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#1e3a5f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Hill View">
+<meta name="apple-mobile-web-app-title" content="">
 <title>Hill View Primary School — Reports</title>
 <link rel="icon" type="image/png" href="badge.png">
 <link rel="apple-touch-icon" href="badge.png">
@@ -114,6 +114,9 @@ h1,h2,h3,.page-h,.section-h,.modal-h,.login-h1,.teach-name{
   width:8px;height:8px;border-radius:50%;
   background:var(--accent);
   flex-shrink:0;
+}
+.nav-badge-invert{
+  filter:brightness(0) invert(1);
 }
 .nav-user{font-size:12px;opacity:.85;letter-spacing:.01em}
 .badge-role{
@@ -415,7 +418,7 @@ thead .sticky-col{background:var(--primary-xl)}
   overflow:hidden;
   padding:4px;
 }
-.login-logo img{width:100%;height:100%;object-fit:contain;border-radius:12px}
+.login-logo img{width:100%;height:100%;object-fit:contain;border-radius:12px;filter:brightness(0) invert(1)}
 .login-h1{
   font-size:clamp(1.25rem, 4vw, 1.375rem);
   font-weight:800;
@@ -3123,7 +3126,7 @@ function renderNavbar() {
   hb.addEventListener('click',toggleSidebar);
   nav.appendChild(hb);
   const t=e('span',{class:'nav-brand'});
-  const bImg=e('img',{src:'badge.png',alt:'Hill View',style:'width:1.75rem;height:1.75rem;border-radius:4px;object-fit:contain;flex-shrink:0'});
+  const bImg=e('img',{src:'badge.png',alt:'Hill View',class:'nav-badge-invert',style:'width:1.75rem;height:1.75rem;border-radius:4px;object-fit:contain;flex-shrink:0'});
   const bText=e('span',{class:'nav-brand-text'}); bText.textContent='Hill View Primary School';
   t.appendChild(bImg); t.appendChild(bText); nav.appendChild(t);
   

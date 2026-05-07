@@ -17,6 +17,39 @@ alter table marks add column if not exists teacher_comment text;
 -- 3. Drop FK constraint on users.id -> auth.users.id to prevent race conditions
 alter table users drop constraint if exists users_id_fkey;
 
+-- 3b. Keep auth.users and public.users in sync at the database layer
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  insert into public.users (id, name, email, role, class_id)
+  values (
+    new.id,
+    coalesce(nullif(trim(new.raw_user_meta_data->>'name'), ''), split_part(new.email, '@', 1)),
+    new.email,
+    coalesce(nullif(new.raw_user_meta_data->>'role', ''), 'teacher'),
+    nullif(new.raw_user_meta_data->>'class_id', '')::uuid
+  )
+  on conflict (id) do update
+  set
+    name = excluded.name,
+    email = excluded.email,
+    role = excluded.role,
+    class_id = excluded.class_id;
+
+  return new;
+end;
+$$;
+
+drop trigger if exists on_auth_user_created on auth.users;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute procedure public.handle_new_user();
+
 -- 4. Create teacher_classes table if it doesn't exist
 create table if not exists teacher_classes (
   id uuid primary key default gen_random_uuid(),
@@ -67,6 +100,10 @@ create policy users_admin_all on users
   with check (
     auth.uid() in (select id from users where role = 'admin')
   );
+
+drop policy if exists users_self_select on users;
+create policy users_self_select on users
+  for select using (id = auth.uid());
 
 -- 10. Add admin CRUD policy for subjects
 drop policy if exists subjects_admin_all on subjects;

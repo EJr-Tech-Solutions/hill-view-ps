@@ -977,8 +977,17 @@ const getComment = (pid, sid) => {
 };
 
 function classSubs(classId) {
-  const cls = S.classes.find(c=>c.id===classId); if(!cls) return [];
-  return S.subjects.filter(s=>s.level===resolveLevel(cls.name));
+  const cls = S.classes.find(c=>c.id===classId);
+  if(!cls) {
+    console.warn('Class not found in S.classes:', classId, '| Available classes:', S.classes.map(c=>c.id));
+    return [];
+  }
+  const level = resolveLevel(cls.name || '');
+  const subs = S.subjects.filter(s=>s.level===level);
+  if (!subs.length) {
+    console.warn('No subjects found for level:', level, '| Class:', cls.name, '| Available levels:', [...new Set(S.subjects.map(s=>s.level))]);
+  }
+  return subs;
 }
 
 function rankPupils(classId) {
@@ -1006,35 +1015,96 @@ function pleCalc(pupilId, classId) {
 //  DATA LOADING
 // ══════════════════════════════════════════════════
 async function loadAll() {
+  if (!S.user) { S.loading=false; render(); return; }
+
   S.loading=true; render();
 
   // Core tables
-  const [clsR,subR,pupR] = await Promise.all([
+  const [clsR,subR] = await Promise.all([
     db.from('classes').select('id,name').order('name'),
     db.from('subjects').select('id,name,level').order('name'),
-    db.from('pupils').select('id,name,class_id,avatar,house,paycode').order('name'),
   ]);
   S.classes  = clsR.data  || [];
-  S.subjects = subR.data  || [];
-  
-  // Load teacher classes FIRST (for filtering pupils)
+  S.subjects  = subR.data  || [];
+  console.log('Classes loaded:', S.classes.length, '| Subjects loaded:', S.subjects.length);
+  if (clsR.error) console.error('Error loading classes:', clsR.error);
+
+  // If no classes loaded, try once more with simpler query
+  if (S.classes.length === 0) {
+    console.warn('No classes loaded, retrying...');
+    const {data: retryData, error: retryErr} = await db.from('classes').select('*');
+    if (retryData && retryData.length > 0) {
+      S.classes = retryData;
+      console.log('Retry successful, classes:', S.classes.length);
+    } else if (retryErr) {
+      console.error('Retry failed:', retryErr);
+    }
+  }
+
+  // Load teacher classes FIRST - IMPORTANT for teachers
   S.teacherClassIds = [];
   if (S.user.role === 'teacher') {
-    const {data: tcData, error: tcErr} = await db.from('teacher_classes').select('class_id').eq('teacher_id', S.user.id);
-    if (tcErr) console.warn('Load teacher_classes error:', tcErr);
-    S.teacherClassIds = (tcData || []).map(tc => tc.class_id);
-    if (S.teacherClassIds.length === 0 && S.user.class_id) {
-      S.teacherClassIds = [S.user.class_id];
+    try {
+      const {data: tcData, error: tcErr} = await db.from('teacher_classes')
+        .select('class_id,classes(name)')
+        .eq('teacher_id', S.user.id);
+
+      if (tcErr) {
+        console.error('Failed to load teacher_classes:', tcErr);
+      } else {
+        S.teacherClassIds = (tcData || []).map(tc => tc.class_id).filter(Boolean);
+      }
+
+      // Fallback: if no teacher_classes entries, use legacy class_id from users table
+      if (S.teacherClassIds.length === 0 && S.user.class_id) {
+        console.warn('No teacher_classes found, using legacy class_id:', S.user.class_id);
+        S.teacherClassIds = [S.user.class_id];
+      }
+
+      // Ensure all teacher class IDs are in S.classes (add from teacher_classes data)
+      if (tcData && tcData.length > 0) {
+        tcData.forEach(tc => {
+          if (tc.class_id && tc.classes?.name && !S.classes.find(c => c.id === tc.class_id)) {
+            console.log('Adding class from teacher_classes:', tc.class_id, tc.classes.name);
+            S.classes.push({ id: tc.class_id, name: tc.classes.name });
+          }
+        });
+      }
+
+      // Initialize selClass if not set
+      if (!S.selClass || !S.teacherClassIds.includes(S.selClass)) {
+        S.selClass = S.teacherClassIds[0] || null;
+        console.log('Initialized selClass to:', S.selClass);
+      }
+
+      console.log('Teacher class IDs loaded:', S.teacherClassIds);
+      console.log('Classes after adding:', S.classes.map(c => c.id));
+    } catch(err) {
+      console.error('Exception loading teacher classes:', err);
     }
-    console.log('Teacher class IDs loaded:', S.teacherClassIds);
   }
-  
-  // Filter pupils based on teacher classes
-  if (S.user.role === 'teacher' && S.teacherClassIds.length > 0) {
-    S.pupils = (pupR.data || []).filter(p => S.teacherClassIds.includes(p.class_id));
+
+  // Load pupils - filter by teacher's classes if teacher role
+  let pupR;
+  if (S.user.role === 'teacher') {
+    if (S.teacherClassIds.length > 0) {
+      // Only load pupils from teacher's assigned classes
+      pupR = await db.from('pupils')
+        .select('id,name,class_id,avatar,house,paycode')
+        .in('class_id', S.teacherClassIds)
+        .order('name');
+    } else {
+      // No classes assigned - empty result
+      pupR = { data: [], error: null };
+    }
   } else {
-    S.pupils = pupR.data || [];
+    // Admin: load all pupils
+    pupR = await db.from('pupils')
+      .select('id,name,class_id,avatar,house,paycode')
+      .order('name');
   }
+  S.pupils = pupR.data || [];
+  console.log('Pupils loaded:', S.pupils.length, 'for teacher class IDs:', S.teacherClassIds);
 
   // Marks
   S.marksMap = {};
@@ -1157,7 +1227,8 @@ async function autoGenerateTeacherComments(savedUpdates) {
   
   const classPupils = S.pupils.filter(p => p.class_id === classId);
   const classSubjects = S.subjects.filter(s => {
-    const lvl = resolveLevel(classId).toLowerCase();
+    const clsObj = S.classes.find(c => c.id === classId);
+    const lvl = resolveLevel(clsObj?.name || '').toLowerCase();
     return s.level?.toLowerCase() === lvl;
   });
   
@@ -1253,6 +1324,9 @@ async function signIn(email,pw) {
   const profile = u[0];
   S.user=profile; S.view=profile.role==='admin'?'overview':'marks';
   await loadAll(); return null;
+
+  // Note: class_id in users table is legacy. The app now uses teacher_classes table.
+  // loadAll() will load teacher classes from teacher_classes table.
 }
 
 async function signOut() {
@@ -1902,27 +1976,50 @@ function ViewOverview() {
     topCard.appendChild(r);
   }); tc.appendChild(topCard); c.appendChild(tc);
 
-  // Submission status table
+  // Submission status table - GROUPED BY TEACHER
   const subCard=d('card');
-  const sh=e('h3',{class:'section-h'}); sh.textContent='Teacher submission status'; subCard.appendChild(sh);
+  const sh=e('h3',{class:'section-h'}); sh.textContent='Teacher Submission Status'; subCard.appendChild(sh);
   if(S.submissions.length){
+    // Group by teacher
+    const teacherMap = {};
+    S.submissions.forEach(row=>{
+      if (!teacherMap[row.teacher_name]) {
+        teacherMap[row.teacher_name] = [];
+      }
+      teacherMap[row.teacher_name].push(row);
+    });
+
     const wrap=d('tbl-wrap');
     const tbl=document.createElement('table');
     const thead=document.createElement('thead'),hr=document.createElement('tr');
     ['Teacher','Class','Subjects Entered','Progress'].forEach(h2=>{const th=document.createElement('th');th.textContent=h2;hr.appendChild(th);});
     thead.appendChild(hr); tbl.appendChild(thead);
     const tbody=document.createElement('tbody');
-    S.submissions.forEach(row=>{
-      const tr=document.createElement('tr');
-      const pct=row.subject_count>0?Math.round((row.subjects_entered/row.subject_count)*100):0;
-      [row.teacher_name,row.class_name,`${row.subjects_entered}/${row.subject_count}`].forEach(txt=>{
-        const td=document.createElement('td'); td.textContent=txt; tr.appendChild(td);
+
+    // Render grouped by teacher
+    Object.entries(teacherMap).forEach(([teacherName, rows]) => {
+      rows.forEach((row, idx) => {
+        const tr=document.createElement('tr');
+        // Only show teacher name on first row
+        if (idx === 0) {
+          const tdT=document.createElement('td');
+          tdT.rowSpan = rows.length;
+          tdT.textContent = teacherName;
+          tdT.style.fontWeight = '500';
+          tr.appendChild(tdT);
+        }
+        const pct=row.subject_count>0?Math.round((row.subjects_entered/row.subject_count)*100):0;
+        [row.class_name,`${row.subjects_entered}/${row.subject_count}`].forEach(txt=>{
+          const td=document.createElement('td'); td.textContent=txt; tr.appendChild(td);
+        });
+        const tdP=document.createElement('td');
+        const bar=d('sub-bar'); const fill=d('sub-fill'); fill.style.width=pct+'%'; bar.appendChild(fill);
+        const pctTxt=e('div',{style:'font-size:11px;color:var(--muted);margin-top:2px'}); pctTxt.textContent=pct+'%'; tdP.appendChild(bar); tdP.appendChild(pctTxt);
+        tr.appendChild(tdP);
+        tbody.appendChild(tr);
       });
-      const tdP=document.createElement('td');
-      const bar=d('sub-bar'); const fill=d('sub-fill'); fill.style.width=pct+'%'; bar.appendChild(fill);
-      const pctTxt=e('div',{style:'font-size:11px;color:var(--muted);margin-top:2px'}); pctTxt.textContent=pct+'%'; tdP.appendChild(bar); tdP.appendChild(pctTxt);
-      tr.appendChild(tdP); tbody.appendChild(tr);
     });
+
     tbl.appendChild(tbody); wrap.appendChild(tbl); subCard.appendChild(wrap);
   } else {
     const msg=d('empty'); msg.textContent='No submission data yet.'; subCard.appendChild(msg);
@@ -2014,10 +2111,53 @@ function TeacherMarks() {
     return c;
   }
 
-  let classId = S.selClass || tcIds[0];
-  const cls = S.classes.find(cc => cc.id === classId);
+  // Validate selected class is in teacher's list, otherwise use first assigned class
+  if (!S.selClass || !tcIds.includes(S.selClass)) {
+    S.selClass = tcIds[0] || null;
+    console.log('Set selClass to:', S.selClass);
+  }
+  let classId = S.selClass;
+
+  // Look up class from already-loaded S.classes (populated in loadAll)
+  let cls = S.classes.find(cc => cc.id === classId);
+
+  if (!cls) {
+    console.error('Class not found in S.classes:', classId);
+    const c = d('content');
+    const hdr = d('hdr-row');
+    const h = e('h2', { class: 'page-h' });
+    h.textContent = 'Enter Marks';
+    hdr.appendChild(h);
+
+    if (tcIds.length >= 1) {
+      const sel = e('select', { style: 'width:auto' });
+      tcIds.forEach(tcId => {
+        const cl = S.classes.find(cc => cc.id === tcId);
+        if (cl) {
+          const o = e('option', { value: cl.id });
+          o.textContent = cl.name;
+          if (cl.id === classId) o.selected = true;
+          sel.appendChild(o);
+        }
+      });
+      sel.addEventListener('change', ev => {
+        S.selClass = ev.target.value;
+        S.pending = {};
+        S.saveMsg = null;
+        render();
+      });
+      hdr.appendChild(sel);
+    }
+
+    const msg = d('empty');
+    msg.innerHTML = '<span class="empty-icon">⚠️</span>Class data not loaded. Try signing out and back in.';
+    c.appendChild(hdr);
+    c.appendChild(msg);
+    return c;
+  }
+
   const classPupils = S.pupils.filter(p => p.class_id === classId);
-  const subs = classSubs(classId);
+  const subs = classSubs(classId) || [];
   const nPending = Object.keys(S.pending).length;
   const hasPending = nPending > 0;
 

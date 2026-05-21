@@ -1,7 +1,6 @@
 .env.local
 node_modules
 .DS_Store
-docs/index.html
 
 # Images (except PWA icons)
 *.jpg

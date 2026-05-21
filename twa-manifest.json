@@ -1,0 +1,36 @@
+{
+  "packageId": "com.hillview.school.reports",
+  "host": "ejr-tech-solutions.github.io",
+  "name": "Hill View Primary School",
+  "launcherName": "Hill View",
+  "display": "standalone",
+  "themeColor": "#1e3a5f",
+  "backgroundColor": "#f4f6fa",
+  "navigationColor": "#1e3a5f",
+  "navigationColorDark": "#0f1f35",
+  "navigationDividerColor": "#1e3a5f",
+  "navigationDividerColorDark": "#0f1f35",
+  "startUrl": "/hill-view-ps/index.html",
+  "iconUrl": "https://ejr-tech-solutions.github.io/hill-view-ps/icon-512.png",
+  "maskableIconUrl": "https://ejr-tech-solutions.github.io/hill-view-ps/icon-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "enableNotifications": true,
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://ejr-tech-solutions.github.io/hill-view-ps/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "orientation": "any",
+  "fingerprint": "",
+  "signingKey": {
+    "path": "./android-signing.keystore",
+    "alias": "mykey"
+  }
+}

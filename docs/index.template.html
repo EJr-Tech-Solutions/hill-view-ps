@@ -871,11 +871,6 @@ thead .sticky-col{background:var(--primary-xl)}
   .section-h{font-size:11px}
 }
 @media(max-width:360px){
-  .pupil-actions{display:grid;grid-template-columns:1fr;gap:6px;min-width:5.5rem}
-  .pupil-actions .btn{width:100%;justify-content:center;margin-left:0!important}
-  .pupil-actions-cell{min-width:6.5rem}
-}
-@media(max-width:360px){
   .navbar{height:50px;gap:.375rem;padding:0 .375rem}
   .nav-brand{gap:.25rem}
   .nav-brand img,.nav-user-area img{width:1.25rem;height:1.25rem}
@@ -889,6 +884,9 @@ thead .sticky-col{background:var(--primary-xl)}
   .sidebar{padding-top:50px}
   .page-header-icon{width:1.75rem!important;height:1.75rem!important;font-size:.875rem!important}
   .page-header{gap:.5rem!important;margin-bottom:12px!important;padding-bottom:10px!important}
+  .pupil-actions{display:grid;grid-template-columns:1fr;gap:6px;min-width:5.5rem}
+  .pupil-actions .btn{width:100%;justify-content:center;margin-left:0!important}
+  .pupil-actions-cell{min-width:6.5rem}
 }
 </style>
 </head>
@@ -1081,10 +1079,14 @@ async function loadAll() {
   S.loading=false; S.pending={}; render();
 }
 
+let reportPupilsLoading = false;
 async function loadReportPupils() {
+  if (reportPupilsLoading) return;
+  reportPupilsLoading = true;
   const {data} = await db.from('pupil_report_summary')
     .select('pupil_id,pupil_name,class_name').order('class_name').order('pupil_name');
   S.reportPupils = data||[];
+  reportPupilsLoading = false;
   if(!S.reportSelId && S.reportPupils.length) S.reportSelId=S.reportPupils[0].pupil_id;
   if(S.reportSelId) await loadReportForPupil(S.reportSelId);
   else render();
@@ -2365,8 +2367,9 @@ function ViewReports() {
 
   // ── Individual report lookup
   if(!S.reportPupils.length) {
-    const msg=d('empty'); msg.textContent='Loading pupils…'; c.appendChild(msg);
-    loadReportPupils(); return c;
+    if (!reportPupilsLoading) loadReportPupils();
+    const msg=d('empty'); msg.innerHTML='<div class="spin"></div>&ensp;Loading pupils…'; c.appendChild(msg);
+    return c;
   }
 
   const sectionLabel=e('div',{style:'font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px'}); sectionLabel.textContent='Preview individual report'; c.appendChild(sectionLabel);
@@ -2417,6 +2420,8 @@ function ViewReports() {
   return c;
 }
 
+let pupilsLoading = false, teachersLoading = false;
+
 // ══════════════════════════════════════════════════
 //  PUPIL MANAGEMENT
 // ══════════════════════════════════════════════════
@@ -2432,9 +2437,10 @@ async function loadPupilsList() {
 }
 
 let pupilsPolling = null;
+let pupilsSubscribed = false;
 function subscribePupilsRealtime() {
-  subscribePupilsRealtime = () => {};
-  if (pupilsPolling) return;
+  if (pupilsSubscribed) return;
+  pupilsSubscribed = true;
   pupilsPolling = setInterval(async () => {
     const {data} = await db.from('pupils').select('id,name,class_id,avatar').order('name');
     if (data) {
@@ -2461,9 +2467,10 @@ async function loadTeachersList() {
 }
 
 let teachersPolling = null;
+let teachersSubscribed = false;
 function subscribeTeachersRealtime() {
-  subscribeTeachersRealtime = () => {};
-  if (teachersPolling) return;
+  if (teachersSubscribed) return;
+  teachersSubscribed = true;
   teachersPolling = setInterval(async () => {
     const {data} = await db.from('users').select('id,name,email,role,class_id,avatar').order('name');
     if (data) {
@@ -2476,8 +2483,6 @@ function subscribeTeachersRealtime() {
 function unsubscribeTeachers() {
   if (teachersPolling) { clearInterval(teachersPolling); teachersPolling = null; }
 }
-
-let pupilsLoading = false, teachersLoading = false;
 
 function unsubscribeAll() {
   unsubscribePupils();

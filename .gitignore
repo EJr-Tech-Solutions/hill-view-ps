@@ -1,7 +1,15 @@
 .env.local
 node_modules
 .DS_Store
+docs/index.html
+
+# Images (except PWA icons)
 *.jpg
 *.jpeg
 *.png
-docs/index.html
+!docs/icon-*.png
+!docs/badge.png
+
+# Android APK build output
+android/
+hillview-app.apk

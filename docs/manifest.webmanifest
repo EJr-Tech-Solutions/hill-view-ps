@@ -1,17 +1,32 @@
 {
-  "name": " ",
+  "name": "Hill View Primary School",
   "short_name": "Hill View",
   "description": "Hill View Primary School report management system.",
-  "start_url": "./index.html",
-  "scope": "./",
+  "start_url": "/hill-view-ps/index.html",
+  "scope": "/hill-view-ps/",
   "display": "standalone",
   "background_color": "#f4f6fa",
   "theme_color": "#1e3a5f",
+  "categories": ["education"],
+  "orientation": "any",
+  "lang": "en",
   "icons": [
     {
       "src": "./badge-app.svg",
       "sizes": "any",
       "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]

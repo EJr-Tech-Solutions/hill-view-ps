@@ -1,9 +1,11 @@
-const CACHE_NAME = 'hillview-shell-v1';
+const CACHE_NAME = 'hillview-shell-v2';
 const APP_SHELL = [
   './',
   './index.html',
+  './style.css',
   './manifest.webmanifest',
-  './badge.png'
+  './badge.png',
+  './badge-app.svg'
 ];
 
 self.addEventListener('install', event => {
@@ -28,16 +30,27 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
+  const url = new URL(event.request.url);
 
+  // Only handle same-origin requests
+  if (url.origin !== self.location.origin) return;
+
+  // App shell: cache-first
+  if (APP_SHELL.includes(url.pathname) || url.pathname === '/') {
+    event.respondWith(
+      caches.match(event.request).then(cached => cached || fetch(event.request))
+    );
+    return;
+  }
+
+  // Everything else: network-first, fallback to cache
   event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
-
-      return fetch(event.request).then(response => {
+    fetch(event.request)
+      .then(response => {
         const copy = response.clone();
         caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
         return response;
-      }).catch(() => caches.match('./index.html'));
-    })
+      })
+      .catch(() => caches.match(event.request))
   );
 });

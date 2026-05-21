@@ -4,6 +4,11 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "build:docs": "node scripts/build-docs.mjs"
+    "build:docs": "node scripts/build-docs.mjs",
+    "build:apk": "bash scripts/build-apk.sh",
+    "build": "npm run build:docs"
+  },
+  "devDependencies": {
+    "@bubblewrap/cli": "^1.24.1"
   }
 }
